@@ -1,0 +1,2 @@
+open module elijars.simpleapplication {
+}
