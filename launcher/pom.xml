@@ -18,6 +18,7 @@
         <junit-jupiter.version>5.7.2</junit-jupiter.version>
         <ant.version>1.10.11</ant.version>
         <assertj.version>3.20.2</assertj.version>
+        <jimfs.version>1.2</jimfs.version>
     </properties>
 
     <dependencies>
@@ -39,6 +40,13 @@
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.jimfs</groupId>
+            <artifactId>jimfs</artifactId>
+            <version>${jimfs.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

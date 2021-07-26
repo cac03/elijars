@@ -12,11 +12,13 @@ import java.util.jar.Manifest;
  * <ul>
  *     <li>{@link ElijarsManifest#ELIJARS_START_JAR} - is the name of the {@code jar} to launch</li>
  *     <li>{@link ElijarsManifest#ELIJARS_START_CLASS} - is the name of the main class. Analogous to {@code Main-Class}</li>
+ *     <li>{@link ElijarsManifest#ELIJARS_START_MODULE} - is the name of the module containing main class</li>
  * </ul>
  */
 public class ElijarsManifest {
     private static final String ELIJARS_START_JAR = "Elijars-Start-Jar";
     private static final String ELIJARS_START_CLASS = "Elijars-Start-Class";
+    private static final String ELIJARS_START_MODULE = "Elijars-Start-Module";
 
     private final Manifest manifest;
 
@@ -39,5 +41,9 @@ public class ElijarsManifest {
 
     private String getValue(String name) {
         return manifest.getMainAttributes().getValue(name);
+    }
+
+    public String getStartModule() {
+        return getValue(ELIJARS_START_MODULE);
     }
 }

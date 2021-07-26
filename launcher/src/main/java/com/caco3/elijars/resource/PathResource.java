@@ -7,10 +7,10 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class PathResource implements Resource {
+class PathResource implements Resource {
     private final Path path;
 
-    public PathResource(Path path) {
+    PathResource(Path path) {
         Assert.notNull(path, "path == null");
         Assert.isTrue(Files.exists(path), () -> "path = '" + path + "' must exist");
 
@@ -28,6 +28,15 @@ public class PathResource implements Resource {
 
     @Override
     public Path getPath() {
+        throwIfClosed();
         return path;
+    }
+
+    private void throwIfClosed() {
+        if (path.getFileSystem().isOpen()) {
+            return;
+        }
+        throw new IllegalStateException("Underlying fileSystem = '"
+                                        + path.getFileSystem() + "' is closed, path = '" + path + "'");
     }
 }
