@@ -11,6 +11,7 @@
     <modules>
         <module>launcher</module>
         <module>sample-application</module>
+        <module>elijars-maven-plugin</module>
     </modules>
 
     <packaging>pom</packaging>
