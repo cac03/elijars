@@ -36,11 +36,13 @@ public class Launcher {
         return new Launcher(launchConfiguration);
     }
 
-    public void run() throws Throwable {
+    public void run(String[] arguments) throws Throwable {
+        Assert.notNull(arguments, "arguments == null");
+
         Module module = defineModule();
         Class<?> clazz = findMainClass(module);
         Method mainMethod = findMainMethod(clazz);
-        invokeMain(mainMethod);
+        invokeMain(mainMethod, arguments);
     }
 
     private Module defineModule() {
@@ -79,9 +81,9 @@ public class Launcher {
         }
     }
 
-    private void invokeMain(Method method) throws Throwable {
+    private void invokeMain(Method method, String[] mainArguments) throws Throwable {
         try {
-            Object[] arguments = new Object[]{new String[0]};
+            Object[] arguments = new Object[]{mainArguments};
             method.invoke(null, arguments);
         } catch (InvocationTargetException e) {
             throw e.getCause();
