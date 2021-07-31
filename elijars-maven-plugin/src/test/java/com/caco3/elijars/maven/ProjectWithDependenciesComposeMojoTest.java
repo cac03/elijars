@@ -22,13 +22,16 @@ public class ProjectWithDependenciesComposeMojoTest {
 
     @BeforeAll
     void setUp() {
-        installLauncher();
-        installPlugin();
-        buildSampleApplication();
+        cleanApplicationProject();
+        installProject();
     }
 
     @AfterAll
     void tearDown() {
+        cleanApplicationProject();
+    }
+
+    private void cleanApplicationProject() {
         String workingDirectory = "../elijars-samples/application-with-guava";
         try (ScopedSystemProperty property = ScopedSystemProperty.create(
                 MAVEN_MULTI_MODULE_PROJECT_DIRECTORY, workingDirectory)) {
@@ -37,37 +40,17 @@ public class ProjectWithDependenciesComposeMojoTest {
         }
     }
 
-    private void installPlugin() {
-        String workingDirectory = ".";
+    private void installProject() {
+        String workingDirectory = "../";
         try (ScopedSystemProperty scopedSystemProperty
                      = ScopedSystemProperty.create(MAVEN_MULTI_MODULE_PROJECT_DIRECTORY, workingDirectory)) {
             int returnCode = mavenCli.doMain(new String[]{"install"}, workingDirectory, System.out, System.out);
             if (returnCode != 0) {
-                throw new IllegalStateException("Cannot install plugin");
+                throw new IllegalStateException("Cannot install project");
             }
         }
     }
-
-    private void installLauncher() {
-        String workingDirectory = "../elijars-launcher";
-        try (ScopedSystemProperty scopedSystemProperty
-                     = ScopedSystemProperty.create(MAVEN_MULTI_MODULE_PROJECT_DIRECTORY, workingDirectory)) {
-            int returnCode = mavenCli.doMain(new String[]{"install"}, workingDirectory, System.out, System.out);
-            if (returnCode != 0) {
-                throw new IllegalStateException("Cannot install plugin");
-            }
-        }
-    }
-
-    private void buildSampleApplication() {
-        String workingDirectory = "../elijars-samples/application-with-guava";
-        try (ScopedSystemProperty property = ScopedSystemProperty.create(
-                MAVEN_MULTI_MODULE_PROJECT_DIRECTORY, workingDirectory)) {
-            int returnCode = mavenCli.doMain(new String[]{"-e", "package"}, workingDirectory, System.out, System.out);
-            assertThat(returnCode).isEqualTo(0);
-        }
-    }
-
+    
     @Test
     void applicationSuccessfullyRuns() {
         Path jar = Paths.get("..", "elijars-samples", "application-with-guava", "target", "application-with-guava-1.0-SNAPSHOT.jar");

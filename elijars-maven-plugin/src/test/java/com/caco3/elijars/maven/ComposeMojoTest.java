@@ -22,19 +22,17 @@ class ComposeMojoTest {
 
     @BeforeAll
     void setUp() {
-        installLauncher();
-        installPlugin();
-        cleanSampleApplication();
-        buildSampleApplication();
+        clean();
+        installProject();
     }
 
     @AfterAll
     void tearDown() {
-        cleanSampleApplication();
+        clean();
     }
 
-    private void cleanSampleApplication() {
-        String workingDirectory = "../elijars-samples/sample-application";
+    private void clean() {
+        String workingDirectory = "../";
         try (ScopedSystemProperty property = ScopedSystemProperty.create(
                 MAVEN_MULTI_MODULE_PROJECT_DIRECTORY, workingDirectory)) {
             int returnCode = mavenCli.doMain(new String[]{"clean"}, workingDirectory, System.out, System.out);
@@ -42,34 +40,14 @@ class ComposeMojoTest {
         }
     }
 
-    private void installPlugin() {
-        String workingDirectory = ".";
+    private void installProject() {
+        String workingDirectory = "../";
         try (ScopedSystemProperty scopedSystemProperty
                      = ScopedSystemProperty.create(MAVEN_MULTI_MODULE_PROJECT_DIRECTORY, workingDirectory)) {
             int returnCode = mavenCli.doMain(new String[]{"install"}, workingDirectory, System.out, System.out);
             if (returnCode != 0) {
                 throw new IllegalStateException("Cannot install plugin");
             }
-        }
-    }
-
-    private void installLauncher() {
-        String workingDirectory = "../elijars-launcher";
-        try (ScopedSystemProperty scopedSystemProperty
-                     = ScopedSystemProperty.create(MAVEN_MULTI_MODULE_PROJECT_DIRECTORY, workingDirectory)) {
-            int returnCode = mavenCli.doMain(new String[]{"install"}, workingDirectory, System.out, System.out);
-            if (returnCode != 0) {
-                throw new IllegalStateException("Cannot install plugin");
-            }
-        }
-    }
-
-    private void buildSampleApplication() {
-        String workingDirectory = "../elijars-samples/sample-application";
-        try (ScopedSystemProperty property = ScopedSystemProperty.create(
-                MAVEN_MULTI_MODULE_PROJECT_DIRECTORY, workingDirectory)) {
-            int returnCode = mavenCli.doMain(new String[]{"-e", "package"}, workingDirectory, System.out, System.out);
-            assertThat(returnCode).isEqualTo(0);
         }
     }
 
