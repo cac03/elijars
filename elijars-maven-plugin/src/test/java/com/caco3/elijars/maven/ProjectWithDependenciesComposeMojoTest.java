@@ -35,7 +35,7 @@ public class ProjectWithDependenciesComposeMojoTest {
         String workingDirectory = "../elijars-samples/application-with-guava";
         try (ScopedSystemProperty property = ScopedSystemProperty.create(
                 MAVEN_MULTI_MODULE_PROJECT_DIRECTORY, workingDirectory)) {
-            int returnCode = mavenCli.doMain(new String[]{"clean"}, workingDirectory, System.out, System.out);
+            int returnCode = mavenCli.doMain(new String[]{"-P", "recursive-test-run", "clean"}, workingDirectory, System.out, System.out);
             assertThat(returnCode).isEqualTo(0);
         }
     }
@@ -44,13 +44,13 @@ public class ProjectWithDependenciesComposeMojoTest {
         String workingDirectory = "../";
         try (ScopedSystemProperty scopedSystemProperty
                      = ScopedSystemProperty.create(MAVEN_MULTI_MODULE_PROJECT_DIRECTORY, workingDirectory)) {
-            int returnCode = mavenCli.doMain(new String[]{"install"}, workingDirectory, System.out, System.out);
+            int returnCode = mavenCli.doMain(new String[]{"-P", "recursive-test-run", "install"}, workingDirectory, System.out, System.out);
             if (returnCode != 0) {
                 throw new IllegalStateException("Cannot install project");
             }
         }
     }
-    
+
     @Test
     void applicationSuccessfullyRuns() {
         Path jar = Paths.get("..", "elijars-samples", "application-with-guava", "target", "application-with-guava-1.0-SNAPSHOT.jar");

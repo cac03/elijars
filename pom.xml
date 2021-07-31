@@ -32,11 +32,14 @@
         <junit-jupiter.version>5.7.2</junit-jupiter.version>
         <maven-plugin-api.version>3.6.1</maven-plugin-api.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven-failsafe-plugin.version>2.22.2</maven-failsafe-plugin.version>
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <maven.version>3.8.1</maven.version>
         <maven-archiver.version>3.5.1</maven-archiver.version>
         <slf4j-simple.version>1.7.32</slf4j-simple.version>
         <wagon.version>3.4.3</wagon.version>
         <zt-exec.version>1.12</zt-exec.version>
+
     </properties>
 
     <build>
@@ -55,6 +58,14 @@
                         <source>${maven.compiler.source}</source>
                         <target>${maven.compiler.target}</target>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${maven-failsafe-plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
