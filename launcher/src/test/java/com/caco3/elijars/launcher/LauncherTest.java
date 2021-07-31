@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class LauncherTest {
     private final SampleApplicationProject sampleApplicationProject = SampleApplicationProject
-            .forSourcesDirectory(Paths.get("..", "sample-application").toAbsolutePath());
+            .forSourcesDirectory(Paths.get("..", "elijars-samples", "sample-application").toAbsolutePath());
     private PrintStream originalSystemOut;
     private final ByteArrayOutputStream outputBytes = new ByteArrayOutputStream();
     private final PrintStream interceptedOutput = new PrintStream(outputBytes);

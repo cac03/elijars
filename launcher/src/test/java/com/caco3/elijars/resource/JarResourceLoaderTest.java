@@ -1,7 +1,6 @@
 package com.caco3.elijars.resource;
 
 import com.caco3.elijars.launcher.SampleApplicationProject;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class JarResourceLoaderTest {
     private final SampleApplicationProject sampleApplicationProject = SampleApplicationProject
-            .forSourcesDirectory(Paths.get("..", "sample-application"));
+            .forSourcesDirectory(Paths.get("..", "elijars-samples", "sample-application"));
     private final Path jar = sampleApplicationProject.jar();
     private final JarResourceLoader jarResourceLoader = JarResourceLoader.forPath(jar);
 
