@@ -57,7 +57,7 @@ public class ComposeMojo extends AbstractMojo {
     private String startModule;
     @Parameter(required = true)
     private String startClass;
-    @Component
+    @Parameter(defaultValue = "${session}", readonly = true)
     private MavenSession mavenSession;
     @Component
     private ArtifactHandler artifactHandler;
