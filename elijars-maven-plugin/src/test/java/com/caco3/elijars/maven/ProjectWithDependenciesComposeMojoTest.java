@@ -22,8 +22,8 @@ public class ProjectWithDependenciesComposeMojoTest {
 
     @BeforeAll
     void setUp() {
-        installPlugin();
         installLauncher();
+        installPlugin();
         buildSampleApplication();
     }
 
@@ -49,7 +49,7 @@ public class ProjectWithDependenciesComposeMojoTest {
     }
 
     private void installLauncher() {
-        String workingDirectory = "../launcher";
+        String workingDirectory = "../elijars-launcher";
         try (ScopedSystemProperty scopedSystemProperty
                      = ScopedSystemProperty.create(MAVEN_MULTI_MODULE_PROJECT_DIRECTORY, workingDirectory)) {
             int returnCode = mavenCli.doMain(new String[]{"install"}, workingDirectory, System.out, System.out);

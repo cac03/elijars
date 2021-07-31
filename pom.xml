@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <modules>
-        <module>launcher</module>
+        <module>elijars-launcher</module>
         <module>elijars-maven-plugin</module>
         <module>elijars-samples</module>
     </modules>

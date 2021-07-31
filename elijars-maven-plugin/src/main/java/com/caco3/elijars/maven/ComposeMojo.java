@@ -47,7 +47,7 @@ public class ComposeMojo extends AbstractMojo {
     private static final String SEPARATOR = "/";
     private static final String ELIJARS_INF = "ELIJARS-INF";
     private static final String LAUNCHER_GROUP_ID = "com.caco3";
-    private static final String LAUNCHER_ARTIFACT_ID = "launcher";
+    private static final String LAUNCHER_ARTIFACT_ID = "elijars-launcher";
 
     @Parameter(defaultValue = "${project}", required = true)
     private MavenProject mavenProject;
