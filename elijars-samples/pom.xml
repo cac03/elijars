@@ -11,6 +11,7 @@
 
     <modules>
         <module>sample-application</module>
+        <module>application-with-guava</module>
     </modules>
 
     <artifactId>elijars-samples</artifactId>
