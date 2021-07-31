@@ -10,13 +10,14 @@ import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 
-@Mojo(name = "elijars")
-public class ElijarsMojo extends AbstractMojo {
+@Mojo(name = "compose")
+public class ComposeMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project}", required = true)
     private MavenProject mavenProject;
     @Parameter(defaultValue = "${project.build.outputDirectory}", required = true)
     private File outputDirectory;
 
+    @SuppressWarnings("RedundantThrows")
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         if (!mavenProject.getPackaging().equals("jar")) {
