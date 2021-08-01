@@ -1,7 +1,5 @@
 package com.caco3.elijars.maven;
 
-import org.apache.maven.cli.MavenCli;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -11,44 +9,18 @@ import org.zeroturnaround.exec.ProcessResult;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ComposeMojoTest {
-    private static final String MAVEN_MULTI_MODULE_PROJECT_DIRECTORY = "maven.multiModuleProjectDirectory";
-    private final MavenCli mavenCli = new MavenCli();
+    private final Maven maven = Maven.createDefault();
 
     @BeforeAll
     void setUp() {
-        clean();
-        installProject();
-    }
-
-    @AfterAll
-    void tearDown() {
-        clean();
-    }
-
-    private void clean() {
-        String workingDirectory = "../";
-        try (ScopedSystemProperty property = ScopedSystemProperty.create(
-                MAVEN_MULTI_MODULE_PROJECT_DIRECTORY, workingDirectory)) {
-            int returnCode = mavenCli.doMain(new String[]{"-P", "recursive-test-run", "clean"}, workingDirectory, System.out, System.out);
-            assertThat(returnCode).isEqualTo(0);
-        }
-    }
-
-    private void installProject() {
-        String workingDirectory = "../";
-        try (ScopedSystemProperty scopedSystemProperty
-                     = ScopedSystemProperty.create(MAVEN_MULTI_MODULE_PROJECT_DIRECTORY, workingDirectory)) {
-            int returnCode = mavenCli.doMain(new String[]{"-P", "recursive-test-run", "install"}, workingDirectory, System.out, System.out);
-            if (returnCode != 0) {
-                throw new IllegalStateException("Cannot install plugin");
-            }
-        }
+        maven.execute(Maven.Project.ELIJARS, List.of("clean", "package"));
     }
 
     @Test
