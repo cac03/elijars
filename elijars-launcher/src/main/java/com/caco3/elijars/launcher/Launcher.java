@@ -42,6 +42,7 @@ public class Launcher {
         Module module = defineModule();
         Class<?> clazz = findMainClass(module);
         Method mainMethod = findMainMethod(clazz);
+        Thread.currentThread().setContextClassLoader(module.getClassLoader());
         invokeMain(mainMethod, arguments);
     }
 

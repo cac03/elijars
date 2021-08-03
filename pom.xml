@@ -28,6 +28,7 @@
         <ant.version>1.10.11</ant.version>
         <assertj.version>3.20.2</assertj.version>
         <guava.version>30.1.1-jre</guava.version>
+        <javafx.version>11.0.2</javafx.version>
         <jimfs.version>1.2</jimfs.version>
         <junit-jupiter.version>5.7.2</junit-jupiter.version>
         <maven-plugin-api.version>3.6.1</maven-plugin-api.version>
@@ -39,7 +40,6 @@
         <slf4j-simple.version>1.7.32</slf4j-simple.version>
         <wagon.version>3.4.3</wagon.version>
         <zt-exec.version>1.12</zt-exec.version>
-
     </properties>
 
     <build>
@@ -102,6 +102,11 @@
                 <groupId>org.zeroturnaround</groupId>
                 <artifactId>zt-exec</artifactId>
                 <version>${zt-exec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-controls</artifactId>
+                <version>${javafx.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.maven</groupId>

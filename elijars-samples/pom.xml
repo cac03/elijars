@@ -12,6 +12,7 @@
     <modules>
         <module>sample-application</module>
         <module>application-with-guava</module>
+        <module>javafx-sample-application</module>
     </modules>
 
     <artifactId>elijars-samples</artifactId>
