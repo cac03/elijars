@@ -10,13 +10,11 @@ import java.util.jar.Manifest;
  * The manifest is usual {@code META-INF/MANIFEST.MF} file.
  * The following attributes affect the execution of launcher:
  * <ul>
- *     <li>{@link ElijarsManifest#ELIJARS_START_JAR} - is the name of the {@code jar} to launch</li>
  *     <li>{@link ElijarsManifest#ELIJARS_START_CLASS} - is the name of the main class. Analogous to {@code Main-Class}</li>
  *     <li>{@link ElijarsManifest#ELIJARS_START_MODULE} - is the name of the module containing main class</li>
  * </ul>
  */
 public class ElijarsManifest {
-    private static final String ELIJARS_START_JAR = "Elijars-Start-Jar";
     private static final String ELIJARS_START_CLASS = "Elijars-Start-Class";
     private static final String ELIJARS_START_MODULE = "Elijars-Start-Module";
 
@@ -29,10 +27,6 @@ public class ElijarsManifest {
 
     public static ElijarsManifest of(Manifest manifest) {
         return new ElijarsManifest(manifest);
-    }
-
-    public String getStartJar() {
-        return getValue(ELIJARS_START_JAR);
     }
 
     public String getStartClassName() {
