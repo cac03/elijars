@@ -36,7 +36,7 @@ public enum SampleApplication {
     public Path getJar() {
         Path jar = root
                 .resolve("target")
-                .resolve(mavenModuleName + "-1.0-SNAPSHOT.jar");
+                .resolve(mavenModuleName + ".jar");
         Assert.state(Files.exists(jar), () -> jar + " must exist");
         return jar;
     }
