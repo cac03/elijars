@@ -13,7 +13,8 @@ public enum SampleApplication {
 
 
     private static Path findProjectRoot() {
-        Path path = Paths.get(".").toAbsolutePath();
+        Path startPath = Paths.get(".").toAbsolutePath();
+        Path path = startPath;
         while (path != null) {
             if (path.getNameCount() > 0 && path.getName(path.getNameCount() - 1).equals(Paths.get("elijars"))) {
                 return path;
@@ -21,7 +22,7 @@ public enum SampleApplication {
             path = path.getParent();
         }
         throw new IllegalStateException(
-                "Unable to find elijars root project directory, tried to descend from root = '" + path + "'");
+                "Unable to find elijars root project directory, tried to descend from root = '" + startPath + "'");
     }
 
     SampleApplication(String mavenModuleName) {
