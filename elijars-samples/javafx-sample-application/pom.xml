@@ -19,7 +19,6 @@
                 <version>${revision}</version>
                 <executions>
                     <execution>
-                        <phase>package</phase>
                         <goals>
                             <goal>compose</goal>
                         </goals>

@@ -11,6 +11,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Component;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
@@ -46,7 +47,11 @@ import java.util.Optional;
  *     <li>{@code startModule} - is the the name of the module with the main class</li>
  * </ol>
  */
-@Mojo(name = "compose", requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
+@Mojo(
+        name = "compose",
+        requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME,
+        defaultPhase = LifecyclePhase.PACKAGE
+)
 public class ComposeMojo extends AbstractMojo {
     private static final String SEPARATOR = "/";
     private static final String ELIJARS_INF = "ELIJARS-INF";
