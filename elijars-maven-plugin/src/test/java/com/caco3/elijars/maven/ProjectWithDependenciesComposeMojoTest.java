@@ -17,16 +17,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ProjectWithDependenciesComposeMojoTest {
     private final Maven maven = Maven.createDefault();
+    private final SampleApplication application = SampleApplication.APPLICATION_WITH_GUAVA;
 
     @BeforeAll
     void setUp() {
-        maven.execute(Maven.Project.ELIJARS, List.of("clean", "install"));
+        maven.execute(Maven.Project.ELIJARS, List.of("verify"));
     }
 
     @Test
     void applicationSuccessfullyRuns() {
-        Path jar = Paths.get("..", "elijars-samples", "application-with-guava", "target", "application-with-guava-1.0-SNAPSHOT.jar");
-        String output = runJar(jar);
+        Path jar = application.getJar();
+
+        ProcessResult processResult = JarUtils.runJar(jar);
+        String output = processResult.outputUTF8();
 
         assertThat(output)
                 .contains("Hello from ListenableFuture");

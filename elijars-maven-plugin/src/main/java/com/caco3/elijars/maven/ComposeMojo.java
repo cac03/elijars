@@ -1,5 +1,6 @@
 package com.caco3.elijars.maven;
 
+import com.caco3.elijars.resource.JarResourceLoader;
 import com.caco3.elijars.utils.Assert;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Primary plugin goal.
@@ -48,6 +50,7 @@ public class ComposeMojo extends AbstractMojo {
     private static final String ELIJARS_INF = "ELIJARS-INF";
     private static final String LAUNCHER_GROUP_ID = "com.caco3";
     private static final String LAUNCHER_ARTIFACT_ID = "elijars-launcher";
+    private static final String STARTER_CLASS_NAME = "com.caco3.elijars.Starter";
 
     @Parameter(defaultValue = "${project}", required = true)
     private MavenProject mavenProject;
@@ -76,6 +79,9 @@ public class ComposeMojo extends AbstractMojo {
 
     private void composeJar() throws MojoFailureException {
         Artifact artifact = mavenProject.getArtifact();
+        if (isElijarsJar(artifact)) {
+            return;
+        }
         try {
             JarArchiver jarArchiver = getJarArchiver();
             addArtifact(jarArchiver, artifact.getFile());
@@ -84,7 +90,15 @@ public class ComposeMojo extends AbstractMojo {
             jarArchiver.addConfiguredManifest(createManifest());
             createArchiveAndKeepOriginal(artifact, jarArchiver);
         } catch (IOException | ManifestException e) {
-            throw new MojoFailureException("Cannot create jar", e);
+            throw new MojoFailureException("Cannot create jar, " + e.getClass() + ": " + e.getMessage(), e);
+        }
+    }
+
+    private static boolean isElijarsJar(Artifact artifact) {
+        try (JarResourceLoader resourceLoader = JarResourceLoader.forPath(artifact.getFile().toPath())) {
+            return resourceLoader
+                    .loadByName(STARTER_CLASS_NAME.replace('.', '/') + ".class")
+                    .isPresent();
         }
     }
 
@@ -125,7 +139,7 @@ public class ComposeMojo extends AbstractMojo {
     private Manifest createManifest() {
         Manifest manifest = new Manifest();
         try {
-            manifest.addConfiguredAttribute(new Manifest.Attribute("Main-Class", "com.caco3.elijars.Starter"));
+            manifest.addConfiguredAttribute(new Manifest.Attribute("Main-Class", STARTER_CLASS_NAME));
             manifest.addConfiguredAttribute(new Manifest.Attribute("Elijars-Start-Class", startClass));
             manifest.addConfiguredAttribute(new Manifest.Attribute("Elijars-Start-Module", startModule));
             return manifest;
@@ -136,7 +150,7 @@ public class ComposeMojo extends AbstractMojo {
 
     private File getLauncherJar() {
         Artifact launcherJar = findLauncherJar();
-        return new File(launcherJar.getFile() + ".jar");
+        return launcherJar.getFile();
     }
 
     private Plugin findElijarsMavenPlugin() {
@@ -148,6 +162,20 @@ public class ComposeMojo extends AbstractMojo {
     }
 
     private Artifact findLauncherJar() {
+        return tryToFindLauncherInCurrentProject()
+                .orElseGet(this::findLauncherInLocalRepository);
+    }
+
+    private Optional<Artifact> tryToFindLauncherInCurrentProject() {
+        return mavenSession
+                .getProjects()
+                .stream()
+                .filter(it -> LAUNCHER_GROUP_ID.equals(it.getGroupId()) && LAUNCHER_ARTIFACT_ID.equals(it.getArtifactId()))
+                .findFirst()
+                .map(MavenProject::getArtifact);
+    }
+
+    private Artifact findLauncherInLocalRepository() {
         Plugin plugin = findElijarsMavenPlugin();
 
         return mavenSession.getLocalRepository()
