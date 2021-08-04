@@ -23,7 +23,9 @@ import org.codehaus.plexus.archiver.jar.ManifestException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Map;
 import java.util.Optional;
 
@@ -103,11 +105,12 @@ public class ComposeMojo extends AbstractMojo {
     }
 
     private void createArchiveAndKeepOriginal(Artifact artifact, JarArchiver jarArchiver) throws IOException {
-        File repackagedFile = new File(outputDirectory, artifact.getFile().getName() + ".repackaged");
-        jarArchiver.setDestFile(repackagedFile);
+        File createdJar = artifact.getFile();
+        Path repackagedFile = outputDirectory.toPath().resolve(createdJar.getName() + ".repackaged");
+        jarArchiver.setDestFile(repackagedFile.toFile());
         jarArchiver.createArchive();
-        Files.move(artifact.getFile().toPath(), Paths.get(artifact.getFile().toString() + ".original"));
-        Files.move(repackagedFile.toPath(), artifact.getFile().toPath());
+        Files.move(createdJar.toPath(), Paths.get(createdJar + ".original"), StandardCopyOption.REPLACE_EXISTING);
+        Files.move(repackagedFile, createdJar.toPath());
     }
 
     private void includeLauncher(JarArchiver jarArchiver) {
