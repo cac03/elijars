@@ -11,7 +11,6 @@ import com.caco3.elijars.utils.Assert;
 import com.caco3.elijars.utils.ExecutionUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.jar.Manifest;
@@ -49,7 +48,7 @@ public class Starter implements AutoCloseable {
     private LaunchConfiguration readConfiguration(List<Path> modulePath) throws IOException {
         Manifest manifest = resourceLoader.loadByName("META-INF/MANIFEST.MF")
                 .orElseThrow()
-                .mapInputStream(this::readManifest);
+                .mapInputStream(Manifest::new);
         ElijarsManifest elijarsManifest = ElijarsManifest.of(manifest);
 
         return new LaunchConfiguration(modulePath, elijarsManifest.getStartClassName(), elijarsManifest.getStartModule());
@@ -61,12 +60,6 @@ public class Starter implements AutoCloseable {
                 .map(Resource::getPath)
                 .filter(path -> path.toString().endsWith(".jar"))
                 .collect(Collectors.toList());
-    }
-
-    private Manifest readManifest(InputStream it) throws IOException {
-        Manifest manifest = new Manifest();
-        manifest.read(it);
-        return manifest;
     }
 
     @Override
