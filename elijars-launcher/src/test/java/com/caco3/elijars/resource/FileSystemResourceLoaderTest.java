@@ -13,21 +13,21 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class JarResourceLoaderTest {
+class FileSystemResourceLoaderTest {
     private final SampleApplicationProject sampleApplicationProject = SampleApplicationProject
             .forSourcesDirectory(Paths.get("..", "elijars-samples", "sample-application"));
     private final Path jar = sampleApplicationProject.jar();
-    private final JarResourceLoader jarResourceLoader = JarResourceLoader.forPath(jar);
+    private final FileSystemResourceLoader fileSystemResourceLoader = FileSystemResourceLoader.forJar(jar);
 
     @AfterEach
     void tearDown() throws Exception {
-        jarResourceLoader.close();
+        fileSystemResourceLoader.close();
         sampleApplicationProject.close();
     }
 
     @Test
     void manifestLoaded() {
-        Optional<Resource> resource = jarResourceLoader.loadByName("META-INF/MANIFEST.MF");
+        Optional<Resource> resource = fileSystemResourceLoader.loadByName("META-INF/MANIFEST.MF");
 
         assertThat(resource)
                 .isNotEmpty();
@@ -35,7 +35,7 @@ class JarResourceLoaderTest {
 
     @Test
     void allResourcesLoaded() {
-        List<Resource> resources = jarResourceLoader.loadAll();
+        List<Resource> resources = fileSystemResourceLoader.loadAll();
 
         assertThat(resources)
                 .isNotEmpty()
@@ -47,16 +47,16 @@ class JarResourceLoaderTest {
 
     @Test
     void throwsIllegalStateExceptionWhenClosed() {
-        jarResourceLoader.close();
+        fileSystemResourceLoader.close();
 
-        assertThatThrownBy(() -> jarResourceLoader.loadByName("abc"))
+        assertThatThrownBy(() -> fileSystemResourceLoader.loadByName("abc"))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("is closed");
     }
 
     @Test
     void returnEmptyOptionalWhenAbsentResourceRequested() {
-        assertThat(jarResourceLoader.loadByName("/does/not/Exist.class"))
+        assertThat(fileSystemResourceLoader.loadByName("/does/not/Exist.class"))
                 .isEmpty();
     }
 }

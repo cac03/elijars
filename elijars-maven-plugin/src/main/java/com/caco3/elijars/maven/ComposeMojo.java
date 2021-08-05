@@ -1,6 +1,6 @@
 package com.caco3.elijars.maven;
 
-import com.caco3.elijars.resource.JarResourceLoader;
+import com.caco3.elijars.resource.FileSystemResourceLoader;
 import com.caco3.elijars.utils.Assert;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
@@ -102,7 +102,7 @@ public class ComposeMojo extends AbstractMojo {
     }
 
     private static boolean isElijarsJar(Artifact artifact) {
-        try (JarResourceLoader resourceLoader = JarResourceLoader.forPath(artifact.getFile().toPath())) {
+        try (FileSystemResourceLoader resourceLoader = FileSystemResourceLoader.forJar(artifact.getFile().toPath())) {
             return resourceLoader
                     .loadByName(STARTER_CLASS_NAME.replace('.', '/') + ".class")
                     .isPresent();

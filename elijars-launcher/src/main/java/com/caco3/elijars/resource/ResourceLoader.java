@@ -11,7 +11,7 @@ import java.util.Optional;
  * The {@link ResourceLoader} should be properly {@link #close() closed} after its usage.
  * All {@link Resource}s become invalid after the {@link ResourceLoader} {@link #close() closed}
  * <p>
- * The primary implementation is {@link JarResourceLoader}
+ * The primary implementation is {@link FileSystemResourceLoader}
  */
 public interface ResourceLoader extends AutoCloseable {
 

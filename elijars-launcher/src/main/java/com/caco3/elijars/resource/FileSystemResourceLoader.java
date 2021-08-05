@@ -15,20 +15,25 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class JarResourceLoader implements ResourceLoader {
+public class FileSystemResourceLoader implements ResourceLoader {
     private final FileSystem fileSystem;
 
-    private JarResourceLoader(FileSystem fileSystem) {
+    private FileSystemResourceLoader(FileSystem fileSystem) {
         Assert.notNull(fileSystem, "fileSystem == null");
 
         this.fileSystem = fileSystem;
     }
 
-    public static JarResourceLoader forPath(Path path) {
-        Assert.notNull(path, "path == null");
-        Assert.isTrue(path.toString().endsWith(".jar"), () -> "path = '" + path + "' must be a .jar file");
+    public static FileSystemResourceLoader forFileSystem(FileSystem fileSystem) {
+        Assert.notNull(fileSystem, "fileSystem == nul");
+        return new FileSystemResourceLoader(fileSystem);
+    }
+
+    public static FileSystemResourceLoader forJar(Path pathToJar) {
+        Assert.notNull(pathToJar, "pathToJar == null");
+        Assert.isTrue(pathToJar.toString().endsWith(".jar"), () -> "pathToJar = '" + pathToJar + "' must be a .jar file");
         try {
-            return new JarResourceLoader(FileSystems.newFileSystem(new URI("jar:" + path.toUri()), Collections.emptyMap()));
+            return new FileSystemResourceLoader(FileSystems.newFileSystem(new URI("jar:" + pathToJar.toUri()), Collections.emptyMap()));
         } catch (IOException | URISyntaxException e) {
             throw new IllegalStateException(e);
         }

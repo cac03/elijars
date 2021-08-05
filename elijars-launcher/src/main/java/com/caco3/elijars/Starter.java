@@ -1,32 +1,30 @@
 package com.caco3.elijars;
 
-import com.caco3.elijars.launcher.ElijarsLaunchException;
+import com.caco3.elijars.launcher.JarLaunchConfigurationSource;
 import com.caco3.elijars.launcher.LaunchConfiguration;
+import com.caco3.elijars.launcher.LaunchConfigurationSource;
 import com.caco3.elijars.launcher.Launcher;
-import com.caco3.elijars.manifest.ElijarsManifest;
-import com.caco3.elijars.resource.JarResourceLoader;
-import com.caco3.elijars.resource.Resource;
+import com.caco3.elijars.resource.FileSystemResourceLoader;
 import com.caco3.elijars.resource.ResourceLoader;
 import com.caco3.elijars.utils.Assert;
 import com.caco3.elijars.utils.ClassUtils;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.jar.Manifest;
-import java.util.stream.Collectors;
-
 public class Starter implements AutoCloseable {
 
     private final ResourceLoader resourceLoader;
+    private final LaunchConfigurationSource configurationSource;
 
-    public Starter(ResourceLoader resourceLoader) {
+    public Starter(ResourceLoader resourceLoader, LaunchConfigurationSource configurationSource) {
         Assert.notNull(resourceLoader, "resourceLoader == null");
+        Assert.notNull(configurationSource, "configurationSource == null");
+        this.configurationSource = configurationSource;
         this.resourceLoader = resourceLoader;
     }
 
     public static Starter createDefault() {
-        return new Starter(JarResourceLoader.forPath(ClassUtils.getClassLocation(Starter.class)));
+        FileSystemResourceLoader resourceLoader = FileSystemResourceLoader.forJar(ClassUtils.getClassLocation(Starter.class));
+        LaunchConfigurationSource configurationSource = new JarLaunchConfigurationSource(resourceLoader);
+        return new Starter(resourceLoader, configurationSource);
     }
 
     public static void main(String[] args) throws Throwable {
@@ -36,30 +34,8 @@ public class Starter implements AutoCloseable {
     }
 
     private void run(String[] args) throws Throwable {
-        try {
-            List<Path> modulePath = createModulePath();
-            LaunchConfiguration launchConfiguration = readConfiguration(modulePath);
-            Launcher.create(launchConfiguration).run(args);
-        } catch (IOException e) {
-            throw new ElijarsLaunchException("Got IOException while reading manifest", e);
-        }
-    }
-
-    private LaunchConfiguration readConfiguration(List<Path> modulePath) throws IOException {
-        Manifest manifest = resourceLoader.loadByName("META-INF/MANIFEST.MF")
-                .orElseThrow()
-                .mapInputStream(Manifest::new);
-        ElijarsManifest elijarsManifest = ElijarsManifest.of(manifest);
-
-        return new LaunchConfiguration(modulePath, elijarsManifest.getStartClassName(), elijarsManifest.getStartModule());
-    }
-
-    private List<Path> createModulePath() {
-        return resourceLoader.loadAll()
-                .stream()
-                .map(Resource::getPath)
-                .filter(path -> path.toString().endsWith(".jar"))
-                .collect(Collectors.toList());
+        LaunchConfiguration launchConfiguration = configurationSource.getConfiguration();
+        Launcher.create(launchConfiguration).run(args);
     }
 
     @Override
