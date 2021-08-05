@@ -13,6 +13,7 @@
         <module>sample-application</module>
         <module>application-with-guava</module>
         <module>javafx-sample-application</module>
+        <module>kotlin-application</module>
     </modules>
 
     <artifactId>elijars-samples</artifactId>

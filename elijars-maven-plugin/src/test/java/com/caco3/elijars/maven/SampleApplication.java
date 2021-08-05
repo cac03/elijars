@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 public enum SampleApplication {
     APPLICATION_WITH_GUAVA("application-with-guava"),
     JAVAFX_SAMPLE_APPLICATION("javafx-sample-application"),
+    KOTLIN_SAMPLE_APPLICATION("kotlin-application"),
     SAMPLE_APPLICATION("sample-application");
 
 

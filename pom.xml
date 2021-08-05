@@ -30,6 +30,7 @@
         <javafx.version>11.0.2</javafx.version>
         <jimfs.version>1.2</jimfs.version>
         <junit-jupiter.version>5.7.2</junit-jupiter.version>
+        <kotlin.version>1.5.21</kotlin.version>
         <maven-plugin-api.version>3.6.1</maven-plugin-api.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-failsafe-plugin.version>2.22.2</maven-failsafe-plugin.version>
@@ -71,6 +72,11 @@
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <version>${maven-failsafe-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.jetbrains.kotlin</groupId>
+                    <artifactId>kotlin-maven-plugin</artifactId>
+                    <version>${kotlin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
@@ -172,6 +178,18 @@
                 <groupId>org.apache.maven.plugin-tools</groupId>
                 <artifactId>maven-plugin-annotations</artifactId>
                 <version>${maven-plugin-api.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-stdlib-jdk8</artifactId>
+                <version>${kotlin.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-test</artifactId>
+                <version>${kotlin.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
