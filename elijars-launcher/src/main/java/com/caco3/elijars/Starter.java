@@ -8,7 +8,7 @@ import com.caco3.elijars.resource.JarResourceLoader;
 import com.caco3.elijars.resource.Resource;
 import com.caco3.elijars.resource.ResourceLoader;
 import com.caco3.elijars.utils.Assert;
-import com.caco3.elijars.utils.ExecutionUtils;
+import com.caco3.elijars.utils.ClassUtils;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -26,7 +26,7 @@ public class Starter implements AutoCloseable {
     }
 
     public static Starter createDefault() {
-        return new Starter(JarResourceLoader.forPath(ExecutionUtils.getRunningApplicationLocation()));
+        return new Starter(JarResourceLoader.forPath(ClassUtils.getClassLocation(Starter.class)));
     }
 
     public static void main(String[] args) throws Throwable {
