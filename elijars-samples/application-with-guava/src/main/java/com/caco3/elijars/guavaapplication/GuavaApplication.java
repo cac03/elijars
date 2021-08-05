@@ -7,7 +7,14 @@ import java.util.concurrent.ExecutionException;
 
 public class GuavaApplication {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        ListenableFuture<String> listenableFuture = Futures.immediateFuture("Hello from ListenableFuture");
+        ListenableFuture<String> listenableFuture = Futures.immediateFuture(createHelloString());
         System.out.println(listenableFuture.get());
+    }
+
+    private static String createHelloString() {
+        return "Hello from ListenableFuture, my module = '"
+               + GuavaApplication.class.getModule()
+               + "', and the ListenableFuture's module = '"
+               + ListenableFuture.class.getModule() + "'";
     }
 }

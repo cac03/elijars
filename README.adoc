@@ -1,0 +1,82 @@
+= Elijars
+
+*Elijars* creates modular executable jars.
+
+When one creates an application with a module descriptor -- `module-info.java` and runs it using the `java -jar command`, the application's classes are placed into unnamed module.
+
+This project packages the `jar` in such a way, that the application classes become part of its module.
+
+== Usage
+
+=== Maven
+
+Add maven plugin to your build:
+
+[source,xml]
+----
+<plugin>
+    <groupId>com.caco3</groupId>
+    <artifactId>elijars-maven-plugin</artifactId>
+    <version>${revision}</version>
+    <executions>
+        <execution>
+            <goals>
+                <goal>compose</goal> <1>
+            </goals>
+            <configuration>
+                <startClass>com.caco3.elijars.simpleapplication.Main</startClass> <2>
+                <startModule>elijars.simpleapplication</startModule> <3>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+----
+<1> Enable `compose` goal of the plugin
+<2> Specify the main class to launch
+<3> Specify the main module name
+
+== Use cases
+
+=== Fat modular jar
+
+Elijars can create modular fat jars with dependencies.
+There is no need to supply dependencies in `--module-path` or `-classpath` to make them available to the application.
+The plugin embeds the dependencies into the final jar.
+
+==== Application with guava sample
+
+The sample application is in the `elijars-samples/application-with-guava` directory.
+
+. Depends on https://github.com/google/guava[Google Guava]
+. Its the only one class -- link:elijars-samples/application-with-guava/src/main/java/com/caco3/elijars/guavaapplication/GuavaApplication.java[`GuavaApplication`]:
+.. Uses `ListenableFuture` from Guava
+.. Prints module names for `GuavaApplication` and `ListenableFuture`
+
+
+===== Run application
+
+To run the application build the project:
+
+. In the root directory (`elijars`):
++
+[source,shell script]
+----
+$ ./mvnw verify
+----
+
+. Run the jar
++
+[source,shell script]
+----
+$ java -jar elijars-samples/application-with-guava/target/application-with-guava.jar
+----
+
+The output is:
+
+[source,text]
+----
+Hello from ListenableFuture, my module = 'module elijars.guavaapplication', and the ListenableFuture's module = 'module com.google.common'
+----
+
+. The `GuavaApplication` class is in the `elijars.guavaapplication` module
+. The `ListenableFuture` is in the Guava's module -- `com.google.common`
