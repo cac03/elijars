@@ -1,8 +1,8 @@
 package com.caco3.elijars;
 
-import com.caco3.elijars.launcher.JarLaunchConfigurationSource;
-import com.caco3.elijars.launcher.LaunchConfiguration;
-import com.caco3.elijars.launcher.LaunchConfigurationSource;
+import com.caco3.elijars.launcher.ApplicationDefinition;
+import com.caco3.elijars.launcher.ApplicationDefinitionSource;
+import com.caco3.elijars.launcher.JarApplicationDefinitionSource;
 import com.caco3.elijars.launcher.Launcher;
 import com.caco3.elijars.resource.FileSystemResourceLoader;
 import com.caco3.elijars.resource.ResourceLoader;
@@ -12,9 +12,9 @@ import com.caco3.elijars.utils.ClassUtils;
 public class Starter implements AutoCloseable {
 
     private final ResourceLoader resourceLoader;
-    private final LaunchConfigurationSource configurationSource;
+    private final ApplicationDefinitionSource configurationSource;
 
-    public Starter(ResourceLoader resourceLoader, LaunchConfigurationSource configurationSource) {
+    public Starter(ResourceLoader resourceLoader, ApplicationDefinitionSource configurationSource) {
         Assert.notNull(resourceLoader, "resourceLoader == null");
         Assert.notNull(configurationSource, "configurationSource == null");
         this.configurationSource = configurationSource;
@@ -23,7 +23,7 @@ public class Starter implements AutoCloseable {
 
     public static Starter createDefault() {
         FileSystemResourceLoader resourceLoader = FileSystemResourceLoader.forJar(ClassUtils.getClassLocation(Starter.class));
-        LaunchConfigurationSource configurationSource = new JarLaunchConfigurationSource(resourceLoader);
+        ApplicationDefinitionSource configurationSource = new JarApplicationDefinitionSource(resourceLoader);
         return new Starter(resourceLoader, configurationSource);
     }
 
@@ -34,8 +34,8 @@ public class Starter implements AutoCloseable {
     }
 
     private void run(String[] args) throws Throwable {
-        LaunchConfiguration launchConfiguration = configurationSource.getConfiguration();
-        Launcher.create(launchConfiguration).run(args);
+        ApplicationDefinition applicationDefinition = configurationSource.getConfiguration();
+        Launcher.create(applicationDefinition).run(args);
     }
 
     @Override

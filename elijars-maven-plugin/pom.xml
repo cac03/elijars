@@ -28,15 +28,6 @@
         </plugins>
     </build>
 
-    <profiles>
-        <profile>
-            <id>recursive-test-run</id>
-            <properties>
-                <skipTests>true</skipTests>
-            </properties>
-        </profile>
-    </profiles>
-
     <dependencies>
         <dependency>
             <groupId>com.caco3</groupId>

@@ -18,7 +18,7 @@ class ComposeMojoTest {
 
     @BeforeAll
     void setUp() {
-        maven.execute(Maven.Project.ELIJARS, List.of("verify"));
+        maven.execute(Maven.Project.ELIJARS, List.of("clean", "verify"));
     }
 
     @Nested
@@ -55,7 +55,9 @@ class ComposeMojoTest {
             String output = processResult.outputUTF8();
 
             assertThat(output)
-                    .contains("Hello(text=Hello from Kotlin Application)");
+                    .contains("Hello(text=Hello from Kotlin Application)")
+                    .doesNotContain("Duplicate class found")
+                    .contains("class com.caco3.elijars.sample.kotlinapplication.Hello");
         }
     }
 
@@ -69,6 +71,17 @@ class ComposeMojoTest {
                     .contains("Hello from ListenableFuture, " +
                               "my module = 'module elijars.guavaapplication', " +
                               "and the ListenableFuture's module = 'module com.google.common'");
+        }
+    }
+
+    @Nested
+    class ClassPathApplicationTest {
+        @Test
+        void classPathApplicationRuns() {
+            String output = JarUtils.runJar(SampleApplication.CLASSPATH_APPLICATION.getJar()).outputUTF8();
+
+            assertThat(output)
+                    .contains("Hello, unnamed module");
         }
     }
 }

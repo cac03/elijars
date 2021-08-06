@@ -3,7 +3,6 @@ package com.caco3.elijars.maven;
 import com.caco3.elijars.utils.Assert;
 import org.apache.maven.cli.MavenCli;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,37 +11,40 @@ import java.util.List;
  */
 public class Maven {
     private static final String MAVEN_MULTI_MODULE_PROJECT_DIRECTORY = "maven.multiModuleProjectDirectory";
-    private static final String RECURSIVE_TEST_RUN_PROFILE = "recursive-test-run";
+    private static final String WORKING_DIRECTORY = "..";
 
     public enum Project {
-        ELIJARS(".."),
-        ELIJARS_MAVEN_PLUGIN("."),
-        SAMPLE_APPLICATION("../elijars-samples/sample-application"),
-        ELIJARS_LAUNCHER("../elijars-launcher"),
-        SAMPLE_APPLICATION_WITH_GUAVA("../elijars-samples/application-with-guava");
+        ELIJARS("elijars"),
+        ELIJARS_MAVEN_PLUGIN("elijars-maven-plugin"),
+        ELIJARS_SAMPLES("elijars-samples"),
+        SAMPLE_APPLICATION("sample-application"),
+        ELIJARS_LAUNCHER("elijars-launcher"),
+        SAMPLE_APPLICATION_WITH_GUAVA("application-with-guava");
 
-        Project(String workingDirectory) {
-            this.workingDirectory = workingDirectory;
+        Project(String mavenModuleName) {
+            this.mavenModuleName = mavenModuleName;
         }
 
-        private final String workingDirectory;
 
-        public String getWorkingDirectory() {
-            return workingDirectory;
+        public String getMavenModuleName() {
+            return mavenModuleName;
         }
+
+        private final String mavenModuleName;
+
     }
 
     private final MavenCli mavenCli = new MavenCli();
-    private final PrintStream outputStream;
-    private final PrintStream errorStream;
+    private final InMemoryPrintStream outputStream;
+    private final InMemoryPrintStream errorStream;
 
-    private Maven(PrintStream outputStream, PrintStream errorStream) {
+    private Maven(InMemoryPrintStream outputStream, InMemoryPrintStream errorStream) {
         this.outputStream = outputStream;
         this.errorStream = errorStream;
     }
 
     public static Maven createDefault() {
-        return new Maven(System.out, System.out);
+        return new Maven(InMemoryPrintStream.create(), InMemoryPrintStream.create());
     }
 
     /**
@@ -54,20 +56,34 @@ public class Maven {
     public void execute(Project project, List<String> goals) {
         Assert.notNull(project, "project == null");
         Assert.notNull(goals, "goals == null");
-        String workingDirectory = project.getWorkingDirectory();
         try (ScopedSystemProperty ignored =
-                     new ScopedSystemProperty(MAVEN_MULTI_MODULE_PROJECT_DIRECTORY, workingDirectory)) {
-            int returnCode = mavenCli.doMain(appendProfile(goals).toArray(new String[0]), workingDirectory, outputStream, errorStream);
+                     new ScopedSystemProperty(MAVEN_MULTI_MODULE_PROJECT_DIRECTORY, WORKING_DIRECTORY)) {
+            String[] arguments = appendProject(skipTests(goals), project)
+                    .toArray(new String[0]);
+            int returnCode = mavenCli.doMain(arguments, WORKING_DIRECTORY, outputStream, errorStream);
             if (returnCode != 0) {
-                throw new IllegalStateException("Maven return codes is not zero, but = " + returnCode);
+                throw new IllegalStateException("Maven return codes is not zero, but = "
+                                                + returnCode + ", error output "
+                                                + System.lineSeparator() + errorStream.asString()
+                                                + System.lineSeparator() + ", output = " + outputStream.asString());
             }
         }
     }
 
-    private static List<String> appendProfile(List<String> arguments) {
+    private static List<String> skipTests(List<String> arguments) {
         List<String> newArguments = new ArrayList<>();
-        newArguments.add("-P");
-        newArguments.add(RECURSIVE_TEST_RUN_PROFILE);
+        newArguments.add("-DskipTests=true");
+        newArguments.addAll(arguments);
+        return newArguments;
+    }
+
+    private static List<String> appendProject(List<String> arguments, Project project) {
+        if (project == Project.ELIJARS) {
+            return arguments;
+        }
+        List<String> newArguments = new ArrayList<>();
+        newArguments.add("--projects");
+        newArguments.add(project.getMavenModuleName());
         newArguments.addAll(arguments);
         return newArguments;
     }

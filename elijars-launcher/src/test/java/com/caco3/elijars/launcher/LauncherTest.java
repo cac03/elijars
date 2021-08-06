@@ -36,11 +36,11 @@ class LauncherTest {
 
     @Test
     void helloWorldPrinted() throws Throwable {
-        LaunchConfiguration configuration = new LaunchConfiguration(
-                List.of(jar),
-                "com.caco3.elijars.simpleapplication.Main",
-                "elijars.simpleapplication"
-        );
+        ApplicationDefinition configuration = ApplicationDefinition.builder()
+                .dependencies(List.of(jar))
+                .mainClassName("com.caco3.elijars.simpleapplication.Main")
+                .mainModuleName("elijars.simpleapplication")
+                .build();
         Launcher launcher = Launcher.create(configuration);
         launcher.run(new String[]{"abc"});
 

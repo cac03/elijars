@@ -5,26 +5,27 @@ import com.caco3.elijars.utils.Assert;
 import java.nio.file.Path;
 import java.util.List;
 
-public class LaunchConfiguration {
-    private final List<Path> modulePath;
+public class ApplicationDefinition {
+    private final List<Path> dependencies;
     private final String mainClassName;
     private final String mainModuleName;
 
-    public LaunchConfiguration(List<Path> modulePath, String mainClassName, String mainModuleName) {
-        Assert.notNull(modulePath, "modulePath == null");
+    public ApplicationDefinition(List<Path> dependencies, String mainClassName, String mainModuleName) {
+        Assert.notNull(dependencies, "modulePath == null");
         Assert.notNull(mainClassName, "mainClassName == null");
-        Assert.notNull(mainModuleName, "mainModuleName == null");
-
         Assert.isTrue(!mainClassName.isBlank(), "mainClassName cannot be blank");
-        Assert.isTrue(!mainModuleName.isBlank(), "mainModuleName cannot be blank");
 
-        this.modulePath = modulePath;
+        this.dependencies = dependencies;
         this.mainClassName = mainClassName;
         this.mainModuleName = mainModuleName;
     }
 
-    public List<Path> getModulePath() {
-        return modulePath;
+    public static ApplicationDefinitionBuilder builder() {
+        return new ApplicationDefinitionBuilder();
+    }
+
+    public List<Path> getDependencies() {
+        return dependencies;
     }
 
     public String getMainClassName() {

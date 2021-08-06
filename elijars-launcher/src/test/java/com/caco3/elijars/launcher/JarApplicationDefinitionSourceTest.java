@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class JarLaunchConfigurationSourceTest {
+class JarApplicationDefinitionSourceTest {
     private static final List<String> DEPENDENCIES = List.of("my-dependency-1.jar", "my-dependency-2.jar");
     private static final String START_CLASS = "org.my.Main";
     private static final String START_MODULE = "org.mymodule";
@@ -32,8 +32,8 @@ class JarLaunchConfigurationSourceTest {
                     .setWorkingDirectory("/")
                     .build()
     );
-    private final JarLaunchConfigurationSource configurationSource
-            = new JarLaunchConfigurationSource(FileSystemResourceLoader.forFileSystem(fileSystem));
+    private final JarApplicationDefinitionSource configurationSource
+            = new JarApplicationDefinitionSource(FileSystemResourceLoader.forFileSystem(fileSystem));
 
     @BeforeEach
     void setUp() throws IOException {
@@ -68,7 +68,7 @@ class JarLaunchConfigurationSourceTest {
                 .satisfies(configuration ->
                         assertThat(configuration.getMainClassName()).isEqualTo(START_CLASS))
                 .satisfies(configuration ->
-                        assertThat(configuration.getModulePath())
+                        assertThat(configuration.getDependencies())
                                 .containsExactlyInAnyOrderElementsOf(expectedModulePath));
     }
 }

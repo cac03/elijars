@@ -63,7 +63,7 @@ public class ComposeMojo extends AbstractMojo {
     private MavenProject mavenProject;
     @Parameter(defaultValue = "${project.build.outputDirectory}", required = true)
     private File outputDirectory;
-    @Parameter(required = true)
+    @Parameter
     private String startModule;
     @Parameter(required = true)
     private String startClass;
@@ -149,7 +149,9 @@ public class ComposeMojo extends AbstractMojo {
         try {
             manifest.addConfiguredAttribute(new Manifest.Attribute("Main-Class", STARTER_CLASS_NAME));
             manifest.addConfiguredAttribute(new Manifest.Attribute("Elijars-Start-Class", startClass));
-            manifest.addConfiguredAttribute(new Manifest.Attribute("Elijars-Start-Module", startModule));
+            if (startModule != null) {
+                manifest.addConfiguredAttribute(new Manifest.Attribute("Elijars-Start-Module", startModule));
+            }
             return manifest;
         } catch (ManifestException e) {
             throw new IllegalStateException(e);

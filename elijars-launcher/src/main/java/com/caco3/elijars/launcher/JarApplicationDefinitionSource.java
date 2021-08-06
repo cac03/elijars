@@ -12,8 +12,8 @@ import java.util.jar.Manifest;
 import java.util.stream.Collectors;
 
 /**
- * {@link JarLaunchConfigurationSource} is a {@link LaunchConfigurationSource} that loads
- * {@link LaunchConfiguration} from a given {@link ResourceLoader} with structure of a jar file.
+ * {@link JarApplicationDefinitionSource} is a {@link ApplicationDefinitionSource} that loads
+ * {@link ApplicationDefinition} from a given {@link ResourceLoader} with structure of a jar file.
  * <p>
  * That is, the source expects:
  *
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  *     <li>{@code *.jar} files present in the {@link ResourceLoader}</li>
  * </ol>
  * <p>
- * The {@code *.jar} files form the {@link LaunchConfiguration#getModulePath()}.
+ * The {@code *.jar} files form the {@link ApplicationDefinition#getDependencies()}.
  * <p>
  * The {@link #MANIFEST_PATH} should be a jar manifest file.
  * It must contain the following entries:
@@ -31,25 +31,29 @@ import java.util.stream.Collectors;
  *     <li>{@link #ELIJARS_START_MODULE} - the module containing the main class</li>
  * </ol>
  */
-public class JarLaunchConfigurationSource implements LaunchConfigurationSource {
+public class JarApplicationDefinitionSource implements ApplicationDefinitionSource {
     private static final String MANIFEST_PATH = "META-INF/MANIFEST.MF";
     private static final String ELIJARS_START_CLASS = "Elijars-Start-Class";
     private static final String ELIJARS_START_MODULE = "Elijars-Start-Module";
 
     private final ResourceLoader resourceLoader;
 
-    public JarLaunchConfigurationSource(ResourceLoader resourceLoader) {
+    public JarApplicationDefinitionSource(ResourceLoader resourceLoader) {
         Assert.notNull(resourceLoader, "resourceLoader == null");
         this.resourceLoader = resourceLoader;
     }
 
     @Override
-    public LaunchConfiguration getConfiguration() {
+    public ApplicationDefinition getConfiguration() {
         Manifest manifest = readManifest();
         String startClass = getStartClass(manifest);
         String startModule = getStartModule(manifest);
         List<Path> modulePath = collectModulePath();
-        return new LaunchConfiguration(modulePath, startClass, startModule);
+        return ApplicationDefinition.builder()
+                .dependencies(modulePath)
+                .mainClassName(startClass)
+                .mainModuleName(startModule)
+                .build();
     }
 
     private Manifest readManifest() {
