@@ -34,7 +34,7 @@ public class Starter implements AutoCloseable {
     }
 
     private void run(String[] args) throws Throwable {
-        ApplicationDefinition applicationDefinition = configurationSource.getConfiguration();
+        ApplicationDefinition applicationDefinition = configurationSource.getApplicationDefinition();
         Launcher.create(applicationDefinition).run(args);
     }
 

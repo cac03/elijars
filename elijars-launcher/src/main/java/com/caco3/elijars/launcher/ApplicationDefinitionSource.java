@@ -21,5 +21,5 @@ public interface ApplicationDefinitionSource {
      *
      * @return {@link ApplicationDefinition}, never {@literal null}
      */
-    ApplicationDefinition getConfiguration();
+    ApplicationDefinition getApplicationDefinition();
 }

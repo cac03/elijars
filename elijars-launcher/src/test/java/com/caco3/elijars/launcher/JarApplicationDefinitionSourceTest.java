@@ -61,7 +61,7 @@ class JarApplicationDefinitionSourceTest {
                 .map(name -> fileSystem.getPath("/", ELIJARS_INF, name))
                 .collect(Collectors.toList());
 
-        assertThat(configurationSource.getConfiguration())
+        assertThat(configurationSource.getApplicationDefinition())
                 .isNotNull()
                 .satisfies(configuration ->
                         assertThat(configuration.getMainModuleName()).isEqualTo(START_MODULE))

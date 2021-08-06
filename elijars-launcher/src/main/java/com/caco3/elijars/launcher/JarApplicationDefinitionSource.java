@@ -44,7 +44,7 @@ public class JarApplicationDefinitionSource implements ApplicationDefinitionSour
     }
 
     @Override
-    public ApplicationDefinition getConfiguration() {
+    public ApplicationDefinition getApplicationDefinition() {
         Manifest manifest = readManifest();
         String startClass = getStartClass(manifest);
         String startModule = getStartModule(manifest);
