@@ -159,8 +159,7 @@ public class ComposeMojo extends AbstractMojo {
     }
 
     private File getLauncherJar() {
-        Artifact launcherJar = findLauncherJar();
-        return launcherJar.getFile();
+        return findLauncherJar();
     }
 
     private Plugin findElijarsMavenPlugin() {
@@ -171,8 +170,9 @@ public class ComposeMojo extends AbstractMojo {
                 .orElseThrow();
     }
 
-    private Artifact findLauncherJar() {
+    private File findLauncherJar() {
         return tryToFindLauncherInCurrentProject()
+                .map(Artifact::getFile)
                 .orElseGet(this::findLauncherInLocalRepository);
     }
 
@@ -185,11 +185,12 @@ public class ComposeMojo extends AbstractMojo {
                 .map(MavenProject::getArtifact);
     }
 
-    private Artifact findLauncherInLocalRepository() {
+    private File findLauncherInLocalRepository() {
         Plugin plugin = findElijarsMavenPlugin();
 
-        return mavenSession.getLocalRepository()
+        Artifact artifact = mavenSession.getLocalRepository()
                 .find(new DefaultArtifact(LAUNCHER_GROUP_ID, LAUNCHER_ARTIFACT_ID,
                         plugin.getVersion(), "compile", "jar", null, artifactHandler));
+        return new File(artifact.getFile().toString() + ".jar");
     }
 }
