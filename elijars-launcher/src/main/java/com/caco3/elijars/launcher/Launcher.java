@@ -1,6 +1,7 @@
 package com.caco3.elijars.launcher;
 
 import com.caco3.elijars.classpath.ElijarsClassLoader;
+import com.caco3.elijars.logging.Logger;
 import com.caco3.elijars.utils.Assert;
 
 import java.io.IOException;
@@ -14,6 +15,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -42,6 +44,7 @@ import java.util.List;
  * </ol>
  */
 public class Launcher {
+    private static final Logger logger = Logger.forClass(Launcher.class);
     private static final ClassLoader parentClassLoader = ClassLoader.getPlatformClassLoader();
 
     private final ApplicationDefinition applicationDefinition;
@@ -60,10 +63,15 @@ public class Launcher {
         Assert.notNull(arguments, "arguments == null");
 
         Module module = defineModule();
+        logger.info(() -> "Defined " + module);
         Class<?> clazz = findMainClass(module);
+        logger.debug(() -> "Found main class = '" + clazz + "'");
         Method mainMethod = findMainMethod(clazz);
+        logger.debug(() -> "Found main method = '" + mainMethod + "'");
         Thread.currentThread().setContextClassLoader(module.getClassLoader());
+        logger.info(() -> "Calling = '" + mainMethod + "' with arguments = '" + Arrays.toString(arguments) + "'");
         invokeMain(mainMethod, arguments);
+        logger.info(() -> mainMethod + " returned");
     }
 
     private Module defineModule() {
@@ -78,6 +86,7 @@ public class Launcher {
         URL[] urls = explodedDependencies.stream()
                 .map(this::toUrl)
                 .toArray(URL[]::new);
+        logger.debug(() -> "ClassLoader urls = '" + Arrays.toString(urls) + "'");
         return new ElijarsClassLoader(urls, parentClassLoader);
     }
 
