@@ -41,8 +41,9 @@ class LauncherTest {
                 .mainClassName("com.caco3.elijars.simpleapplication.Main")
                 .mainModuleName("elijars.simpleapplication")
                 .build();
-        Launcher launcher = Launcher.create(configuration);
-        launcher.run(new String[]{"abc"});
+        try (Launcher launcher = Launcher.create(configuration)) {
+            launcher.run(new String[]{"abc"});
+        }
 
         assertThat(getOutput())
                 .contains("Hello world")

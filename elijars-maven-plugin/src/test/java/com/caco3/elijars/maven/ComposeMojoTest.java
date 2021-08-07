@@ -2,17 +2,23 @@ package com.caco3.elijars.maven;
 
 import com.caco3.elijars.resource.FileSystemResourceLoader;
 import com.caco3.elijars.resource.Resource;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.zeroturnaround.exec.ProcessResult;
 
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,6 +29,23 @@ class ComposeMojoTest {
     @BeforeAll
     void setUp() {
         maven.execute(Maven.Project.ELIJARS, List.of("clean", "verify"));
+    }
+
+    @AfterEach
+    void tearDown() throws IOException {
+        assertNoTemporaryFiles();
+    }
+
+    private static void assertNoTemporaryFiles() throws IOException {
+        PathMatcher pathMatcher = FileSystems.getDefault().getPathMatcher("glob:elijars*");
+        Path path = Paths.get(System.getProperty("java.io.tmpdir"));
+        int depth = 1;
+        List<Path> temporaryElijarsFiles = Files.walk(path, depth)
+                .filter(Files::isDirectory)
+                .map(path::relativize)
+                .filter(pathMatcher::matches)
+                .collect(Collectors.toUnmodifiableList());
+        assertThat(temporaryElijarsFiles).isEmpty();
     }
 
     @Nested
