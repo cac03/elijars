@@ -18,6 +18,17 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Custom-Entry>Test entry for classpath application</Custom-Entry>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>com.caco3</groupId>
                 <artifactId>elijars-maven-plugin</artifactId>
                 <version>${revision}</version>

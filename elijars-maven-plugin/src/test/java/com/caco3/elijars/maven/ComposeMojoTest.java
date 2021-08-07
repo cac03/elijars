@@ -1,5 +1,7 @@
 package com.caco3.elijars.maven;
 
+import com.caco3.elijars.resource.FileSystemResourceLoader;
+import com.caco3.elijars.resource.Resource;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -9,6 +11,8 @@ import org.zeroturnaround.exec.ProcessResult;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Optional;
+import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,14 +27,34 @@ class ComposeMojoTest {
 
     @Nested
     class SampleApplicationTest {
+        private final SampleApplication application = SampleApplication.SAMPLE_APPLICATION;
+
         @Test
         void sampleApplicationJarCreated() {
-            SampleApplication application = SampleApplication.SAMPLE_APPLICATION;
             Path expectedJar = application.getJar();
             Path originalJar = Paths.get(application.getJar().toAbsolutePath() + ".original");
 
             assertThat(expectedJar).exists();
             assertThat(originalJar).exists();
+        }
+
+        @Test
+        void originalPomPreserved() {
+            try (FileSystemResourceLoader resourceLoader = FileSystemResourceLoader.forJar(application.getJar())) {
+                Optional<Resource> resource = resourceLoader.loadByName("META-INF/maven/com.caco3/sample-application/pom.xml");
+                assertThat(resource)
+                        .isPresent();
+            }
+        }
+
+        @Test
+        void applicationReadsItsOwnManifest() {
+            ProcessResult processResult = JarUtils.runJar(application.getJar());
+            String output = processResult.outputUTF8();
+
+            assertThat(output)
+                    .contains("Manifest[Custom-Entry] = Test value")
+                    .doesNotContainPattern(Pattern.compile("Elijars-.*"));
         }
     }
 
@@ -76,12 +100,24 @@ class ComposeMojoTest {
 
     @Nested
     class ClassPathApplicationTest {
+        private final SampleApplication application = SampleApplication.CLASSPATH_APPLICATION;
+
         @Test
         void classPathApplicationRuns() {
-            String output = JarUtils.runJar(SampleApplication.CLASSPATH_APPLICATION.getJar()).outputUTF8();
+            String output = JarUtils.runJar(application.getJar()).outputUTF8();
 
             assertThat(output)
                     .contains("Hello, unnamed module");
+        }
+
+        @Test
+        void applicationReadsItsOwnManifest() {
+            ProcessResult processResult = JarUtils.runJar(application.getJar());
+            String output = processResult.outputUTF8();
+
+            assertThat(output)
+                    .contains("Manifest[Custom-Entry] = Test entry for classpath application")
+                    .doesNotContainPattern(Pattern.compile("Elijars-.*"));
         }
     }
 }

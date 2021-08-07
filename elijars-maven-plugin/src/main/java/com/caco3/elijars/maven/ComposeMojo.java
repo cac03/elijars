@@ -30,6 +30,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.codehaus.plexus.archiver.util.DefaultArchivedFileSet.archivedFileSet;
+
 /**
  * Primary plugin goal.
  * It creates an executable modular fat jar. That is:
@@ -91,7 +93,9 @@ public class ComposeMojo extends AbstractMojo {
         }
         try {
             JarArchiver jarArchiver = getJarArchiver();
+            jarArchiver.setMinimalDefaultManifest(true);
             addArtifact(jarArchiver, artifact.getFile());
+            copyMetaInf(jarArchiver, artifact.getFile());
             includeLauncher(jarArchiver);
             includeDependencies(jarArchiver);
             jarArchiver.addConfiguredManifest(createManifest());
@@ -99,6 +103,10 @@ public class ComposeMojo extends AbstractMojo {
         } catch (IOException | ManifestException e) {
             throw new MojoFailureException("Cannot create jar, " + e.getClass() + ": " + e.getMessage(), e);
         }
+    }
+
+    private void copyMetaInf(JarArchiver jarArchiver, File file) {
+        jarArchiver.addArchivedFileSet(archivedFileSet(file).include(new String[]{"META-INF/**"}));
     }
 
     private static boolean isElijarsJar(Artifact artifact) {
@@ -119,7 +127,7 @@ public class ComposeMojo extends AbstractMojo {
     }
 
     private void includeLauncher(JarArchiver jarArchiver) {
-        jarArchiver.addArchivedFileSet(getLauncherJar());
+        jarArchiver.addArchivedFileSet(archivedFileSet(getLauncherJar()).exclude(new String[]{"META-INF/**"}));
     }
 
     private void addArtifact(JarArchiver jarArchiver, File file) {
@@ -127,9 +135,9 @@ public class ComposeMojo extends AbstractMojo {
     }
 
     private void includeDependencies(JarArchiver jarArchiver) {
-        mavenProject.
-                getArtifacts()
-                .stream().map(Artifact::getFile)
+        mavenProject.getArtifacts()
+                .stream()
+                .map(Artifact::getFile)
                 .forEach(it -> addArtifact(jarArchiver, it));
     }
 
