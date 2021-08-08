@@ -79,6 +79,15 @@ class ComposeMojoTest {
                     .contains("Manifest[Custom-Entry] = Test value")
                     .doesNotContainPattern(Pattern.compile("Elijars-.*"));
         }
+
+        @Test
+        void applicationSuccessfullyAccessesResourcesAfterEarlyReturnFromMain() {
+            ProcessResult processResult = JarUtils.runJar(application.getJar(), "early-main-return");
+            String output = processResult.outputUTF8();
+
+            assertThat(output)
+                    .contains("Successfully read manifest");
+        }
     }
 
     @Nested

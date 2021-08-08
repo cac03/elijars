@@ -3,6 +3,7 @@ package com.caco3.elijars.simpleapplication;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 import java.util.jar.Manifest;
 
 public class Main {
@@ -20,6 +21,8 @@ public class Main {
             Module module = Main.class.getModule();
             System.out.println("Arguments: " + Arrays.toString(args));
             System.out.println("Module = '" + module + "'");
+        } else if (action.equals("early-main-return")) {
+            earlyMainReturn();
         } else {
             throw new IllegalStateException("Unknown action = '" + action + "'");
         }
@@ -32,5 +35,18 @@ public class Main {
         } catch (IOException e) {
             throw new IllegalStateException("Couldn't find manifest", e);
         }
+    }
+
+    private static void earlyMainReturn() {
+        new Thread(() -> {
+            try {
+                Thread.sleep(TimeUnit.SECONDS.toMillis(1));
+            } catch (InterruptedException e) {
+                throw new IllegalStateException(e);
+            }
+
+            readManifest();
+            System.out.println("Successfully read manifest");
+        }).start();
     }
 }
