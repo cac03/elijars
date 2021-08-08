@@ -42,13 +42,13 @@ class LauncherTest {
                 .mainModuleName("elijars.simpleapplication")
                 .build();
         try (Launcher launcher = Launcher.create(configuration)) {
-            launcher.run(new String[]{"abc"});
+            launcher.run(new String[]{"hello-modular-world", "abc"});
         }
 
         assertThat(getOutput())
                 .contains("Hello world")
                 .contains("Module = 'module elijars.simpleapplication'")
-                .contains("Arguments: [abc]");
+                .contains("Arguments: [hello-modular-world, abc]");
     }
 
     private String getOutput() {

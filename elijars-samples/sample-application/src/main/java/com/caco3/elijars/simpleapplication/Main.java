@@ -7,13 +7,22 @@ import java.util.jar.Manifest;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println(HelloWorld.create());
-        Module module = Main.class.getModule();
-        System.out.println("Module = '" + module + "'");
-        System.out.println("Arguments: " + Arrays.toString(args));
-        Manifest manifest = readManifest();
-        manifest.getMainAttributes()
-                .forEach((k, v) -> System.out.println("Manifest[" + k + "] = " + v));
+        if (args.length == 0) {
+            throw new IllegalStateException("No arguments");
+        }
+        String action = args[0];
+        if (action.equals("read-manifest")) {
+            Manifest manifest = readManifest();
+            manifest.getMainAttributes()
+                    .forEach((k, v) -> System.out.println("Manifest[" + k + "] = " + v));
+        } else if (action.equals("hello-modular-world")) {
+            System.out.println(HelloWorld.create());
+            Module module = Main.class.getModule();
+            System.out.println("Arguments: " + Arrays.toString(args));
+            System.out.println("Module = '" + module + "'");
+        } else {
+            throw new IllegalStateException("Unknown action = '" + action + "'");
+        }
     }
 
     private static Manifest readManifest() {

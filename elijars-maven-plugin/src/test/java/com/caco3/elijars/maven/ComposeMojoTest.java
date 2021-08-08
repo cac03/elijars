@@ -72,7 +72,7 @@ class ComposeMojoTest {
 
         @Test
         void applicationReadsItsOwnManifest() {
-            ProcessResult processResult = JarUtils.runJar(application.getJar());
+            ProcessResult processResult = JarUtils.runJar(application.getJar(), "read-manifest");
             String output = processResult.outputUTF8();
 
             assertThat(output)
