@@ -60,10 +60,22 @@ PrintModuleDemo module com.caco3.elijarsdemo.printmodule
 
 == Usage
 
-=== Maven
+=== If application is modular
 
-. If your application is modular, then make the module `open`.
-For example:
+If your application is modular, then make the class with the `main` method _readable_.
+To do so either:
+
+* add `exports` declaration for the package containing the class, for example:
++
+[source,java]
+.module-info.java
+----
+module com.caco3.elijarsdemo.printmodule {
+    exports com.caco3.elijarsdemo.printmodule;
+}
+----
+
+* `open` the module, for example:
 +
 [source,java]
 .module-info.java
@@ -72,8 +84,10 @@ open module com.caco3.elijarsdemo.printmodule {
 }
 ----
 
-. Add maven plugin to your build:
-+
+=== Maven
+
+Add maven plugin to your build:
+
 [source,xml]
 ----
 <plugin>
