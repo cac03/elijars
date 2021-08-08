@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>elijars-demos</artifactId>
+        <groupId>com.caco3</groupId>
+        <version>${revision}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>elijars-print-module-demo</artifactId>
+
+    <profiles>
+        <profile>
+            <id>compose-jar</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.caco3</groupId>
+                        <artifactId>elijars-maven-plugin</artifactId>
+                        <version>${revision}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>compose</goal>
+                                </goals>
+                                <configuration>
+                                    <startModule>com.caco3.elijarsdemo.printmodule</startModule>
+                                    <startClass>com.caco3.elijarsdemo.printmodule.PrintModuleDemo</startClass>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.caco3.elijarsdemo.printmodule.PrintModuleDemo</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

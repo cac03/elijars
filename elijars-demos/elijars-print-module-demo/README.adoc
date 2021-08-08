@@ -1,0 +1,5 @@
+= Print module demo
+
+The sample application prints a module where the entry point class belongs.
+
+See the link:../../README.adoc[README of the project ]

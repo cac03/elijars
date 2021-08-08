@@ -1,17 +1,79 @@
 = Elijars
 
-*Elijars* creates modular executable jars.
+*Elijars* creates JPMS aware executable jars with dependencies.
 
-When one creates an application with a module descriptor -- `module-info.java` and runs it using the `java -jar command`, the application's classes are placed into unnamed module.
+The jars:
 
-This project packages the `jar` in such a way, that the application classes become part of its module.
+. Are *JPMS aware*.
+** If application has a module descriptor -- `module-info.java`, then the `java -jar myjar.jar` command places application classes into a module.
+See <<jpmsAwareness>>
+** Otherwise it falls back to class path mode, and puts all classes and its dependencies into a custom `ClassLoader`
+. *Include all dependencies*.
+The Elijars project includes all dependencies into a _single_ jar, similar to Spring Boot
+
+[[jpmsAwareness]]
+== JPMS awareness
+
+When one creates an executable `jar` with module descriptor.
+All application classes are placed into unnamed module if it run using `java -jar` command.
+
+Consider the following application -- link:elijars-demos/elijars-print-module-demo/[`elijars-print-module-demo`].
+
+The application:
+
+. Has a class with a `main` method -- link:elijars-demos/elijars-print-module-demo/src/main/java/com/caco3/elijarsdemo/printmodule/PrintModuleDemo.java[`PrintModuleDemo.java`].
+The method prints the module, where the class belongs
+. Has module descriptor -- link:elijars-demos/elijars-print-module-demo/src/main/java/module-info.java[`module-info.java`]
+. And `pom.xml`
+
+When its jar with `Main-Class` attribute specified built and run:
+
+[source,bash]
+----
+$ ./mvnw clean package --projects elijars-demos/elijars-print-module-demo
+$ java -jar elijars-demos/elijars-print-module-demo/target/elijars-print-module-demo-0.0.1-SNAPSHOT.jar
+----
+
+The output is:
+
+[source]
+----
+PrintModuleDemo unnamed module @34033bd0
+----
+
+Unnamed module is not what might be expected.
+
+On the other hand, when a jar is repackaged using the Elijars' maven pluigin:
+
+[source,bash]
+----
+$ ./mvnw package --projects elijars-demos/elijars-print-module-demo -P compose-jar
+$  java -jar elijars-demos/elijars-print-module-demo/target/elijars-print-module-demo-0.0.1-SNAPSHOT.jar
+----
+
+The output is:
+
+[source]
+----
+PrintModuleDemo module com.caco3.elijarsdemo.printmodule
+----
 
 == Usage
 
 === Maven
 
-Add maven plugin to your build:
+. If your application is modular, then make the module `open`.
+For example:
++
+[source,java]
+.module-info.java
+----
+open module com.caco3.elijarsdemo.printmodule {
+}
+----
 
+. Add maven plugin to your build:
++
 [source,xml]
 ----
 <plugin>

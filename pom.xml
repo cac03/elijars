@@ -12,6 +12,7 @@
         <module>elijars-launcher</module>
         <module>elijars-maven-plugin</module>
         <module>elijars-samples</module>
+        <module>elijars-demos</module>
     </modules>
 
     <packaging>pom</packaging>
