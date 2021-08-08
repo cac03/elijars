@@ -134,9 +134,9 @@ public class Launcher implements AutoCloseable {
         try {
             return classLoader.loadClass(applicationDefinition.getMainClassName());
         } catch (ClassNotFoundException e) {
-            throw new ElijarsLaunchException("Unable to find main class = '"
-                                             + applicationDefinition.getMainClassName()
-                                             + "' in module = '" + applicationDefinition.getMainModuleName() + "'");
+            throw new ElijarsLaunchException(
+                    "Unable to find main class = '" + applicationDefinition.getMainClassName()
+                    + "' in module = '" + applicationDefinition.getMainModuleName() + "'", e);
         }
     }
 
