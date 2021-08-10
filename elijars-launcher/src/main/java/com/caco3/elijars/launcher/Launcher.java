@@ -24,7 +24,7 @@ import java.util.List;
  * <p>
  * The {@code run} method proceeds as follows:
  *
- * <h4>When {@link ApplicationDefinition#getMainModuleName()} is specified</h4>
+ * <h3>When {@link ApplicationDefinition#getMainModuleName()} is specified</h3>
  * <ol>
  *     <li>Collect dependencies</li>
  *     <li>Put all of them onto the module path</li>
@@ -35,7 +35,7 @@ import java.util.List;
  *     <li>Invoke it</li>
  * </ol>
  *
- * <h4>When {@link ApplicationDefinition#getMainModuleName()} is not specified, that is the application is not modular</h4>
+ * <h3>When {@link ApplicationDefinition#getMainModuleName()} is not specified, that is the application is not modular</h3>
  * <ol>
  *     <li>Collect dependencies</li>
  *     <li>Create a new class loader - {@link ElijarsClassLoader}. It will load all dependency classes</li>

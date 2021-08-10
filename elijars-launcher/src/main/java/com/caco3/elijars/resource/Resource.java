@@ -51,10 +51,11 @@ public interface Resource {
      * The method closes {@link InputStream} after {@link IoFunction#apply(Object)} invocation
      * <p>
      * Example:
-     * <pre>
+     * <pre>{@code
      *     Resource resource = ...;
      *     byte[] bytes = resource.mapInputStream(inputStream -> inputStream.readAllBytes());
      *     // use bytes
+     * }
      * </pre>
      *
      * @param mapper function to map {@link InputStream} to {@code R}
