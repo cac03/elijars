@@ -2,12 +2,10 @@
 
 *Elijars* creates JPMS aware executable jars with dependencies.
 
-The jars:
-
-. Are *JPMS aware*.
-** If application has a module descriptor -- `module-info.java`, then the `java -jar myjar.jar` command places application classes into a module.
+. *JPMS awareness*:
+.. If an application has a module descriptor -- `module-info.java`, then the `java -jar myjar.jar` command places application classes into a module _created by developer_, by default they are in _unnamed_ module.
 See <<jpmsAwareness>>
-** Otherwise it falls back to class path mode, and puts all classes and its dependencies into a custom `ClassLoader`
+.. Otherwise it falls back to class path mode, and puts all classes and its dependencies into a custom `ClassLoader`
 . *Include all dependencies*.
 The Elijars project includes all dependencies into a _single_ jar, similar to Spring Boot
 
