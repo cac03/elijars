@@ -55,7 +55,7 @@ class ComposeMojoTest {
         @Test
         void sampleApplicationJarCreated() {
             Path expectedJar = application.getJar();
-            Path originalJar = Paths.get(application.getJar().toAbsolutePath() + ".original");
+            Path originalJar = application.getOriginalJar();
 
             assertThat(expectedJar).exists();
             assertThat(originalJar).exists();

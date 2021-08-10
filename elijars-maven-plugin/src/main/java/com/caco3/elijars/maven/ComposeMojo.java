@@ -67,7 +67,7 @@ public class ComposeMojo extends AbstractMojo {
     private File outputDirectory;
     @Parameter
     private String startModule;
-    @Parameter(required = true)
+    @Parameter
     private String startClass;
     @Parameter(defaultValue = "${session}", readonly = true)
     private MavenSession mavenSession;
@@ -122,7 +122,9 @@ public class ComposeMojo extends AbstractMojo {
         Path repackagedFile = outputDirectory.toPath().resolve(createdJar.getName() + ".repackaged");
         jarArchiver.setDestFile(repackagedFile.toFile());
         jarArchiver.createArchive();
-        Files.move(createdJar.toPath(), Paths.get(createdJar + ".original"), StandardCopyOption.REPLACE_EXISTING);
+        Files.move(createdJar.toPath(),
+                Paths.get(FileNameUtils.removeExtension(createdJar.toString()) + "-original.jar"),
+                StandardCopyOption.REPLACE_EXISTING);
         Files.move(repackagedFile, createdJar.toPath());
     }
 

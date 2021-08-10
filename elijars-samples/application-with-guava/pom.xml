@@ -23,6 +23,18 @@
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.caco3.elijars.guavaapplication.GuavaApplication</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
                 <groupId>com.caco3</groupId>
                 <artifactId>elijars-maven-plugin</artifactId>
                 <version>${revision}</version>
@@ -31,10 +43,6 @@
                         <goals>
                             <goal>compose</goal>
                         </goals>
-                        <configuration>
-                            <startClass>com.caco3.elijars.guavaapplication.GuavaApplication</startClass>
-                            <startModule>elijars.guavaapplication</startModule>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
