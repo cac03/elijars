@@ -46,12 +46,12 @@ public class JarApplicationDefinitionSource implements ApplicationDefinitionSour
     @Override
     public ApplicationDefinition getApplicationDefinition() {
         Manifest manifest = readManifest();
-        String startClass = getStartClass(manifest);
+        String mainClass = getMainClass(manifest);
         String startModule = getStartModule(manifest);
         List<Path> modulePath = collectModulePath();
         return ApplicationDefinition.builder()
                 .dependencies(modulePath)
-                .mainClassName(startClass)
+                .mainClassName(mainClass)
                 .mainModuleName(startModule)
                 .build();
     }
@@ -67,7 +67,7 @@ public class JarApplicationDefinitionSource implements ApplicationDefinitionSour
         }
     }
 
-    private static String getStartClass(Manifest manifest) {
+    private static String getMainClass(Manifest manifest) {
         return manifest.getMainAttributes().getValue(ELIJARS_START_CLASS);
     }
 

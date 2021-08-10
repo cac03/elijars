@@ -45,7 +45,7 @@ import static org.codehaus.plexus.archiver.util.DefaultArchivedFileSet.archivedF
  * The plugin requires two parameters:
  *
  * <ol>
- *     <li>{@code startClass} - is the class' name with main method</li>
+ *     <li>{@code mainClass} - is the class' name with main method</li>
  *     <li>{@code startModule} - is the the name of the module with the main class</li>
  * </ol>
  */
@@ -68,7 +68,7 @@ public class ComposeMojo extends AbstractMojo {
     @Parameter
     private String startModule;
     @Parameter
-    private String startClass;
+    private String mainClass;
     @Parameter(defaultValue = "${session}", readonly = true)
     private MavenSession mavenSession;
     @Component
@@ -98,10 +98,19 @@ public class ComposeMojo extends AbstractMojo {
             copyMetaInf(jarArchiver, artifact.getFile());
             includeLauncher(jarArchiver);
             includeDependencies(jarArchiver);
-            jarArchiver.addConfiguredManifest(createManifest());
+            jarArchiver.addConfiguredManifest(createManifest(resolveEntryPoint(artifact.getFile())));
             createArchiveAndKeepOriginal(artifact, jarArchiver);
         } catch (IOException | ManifestException e) {
             throw new MojoFailureException("Cannot create jar, " + e.getClass() + ": " + e.getMessage(), e);
+        }
+    }
+
+    private EntryPoint resolveEntryPoint(File jar) {
+        if (mainClass != null) {
+            return new EntryPoint(startModule, mainClass);
+        }
+        try (FileSystemResourceLoader resourceLoader = FileSystemResourceLoader.forJar(jar.toPath())) {
+            return new EntryPointResolver().resolveEntryPoint(resourceLoader);
         }
     }
 
@@ -154,13 +163,13 @@ public class ComposeMojo extends AbstractMojo {
         return archiver;
     }
 
-    private Manifest createManifest() {
+    private Manifest createManifest(EntryPoint entryPoint) {
         Manifest manifest = new Manifest();
         try {
             manifest.addConfiguredAttribute(new Manifest.Attribute("Main-Class", STARTER_CLASS_NAME));
-            manifest.addConfiguredAttribute(new Manifest.Attribute("Elijars-Start-Class", startClass));
-            if (startModule != null) {
-                manifest.addConfiguredAttribute(new Manifest.Attribute("Elijars-Start-Module", startModule));
+            manifest.addConfiguredAttribute(new Manifest.Attribute("Elijars-Start-Class", entryPoint.getMainClassName()));
+            if (entryPoint.getModuleName() != null) {
+                manifest.addConfiguredAttribute(new Manifest.Attribute("Elijars-Start-Module", entryPoint.getModuleName()));
             }
             return manifest;
         } catch (ManifestException e) {

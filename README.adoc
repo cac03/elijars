@@ -100,7 +100,7 @@ Add maven plugin to your build:
                 <goal>compose</goal> <!--1-->
             </goals>
             <configuration>
-                <startClass>com.caco3.elijars.simpleapplication.Main</startClass> <!--2-->
+                <mainClass>com.caco3.elijars.simpleapplication.Main</mainClass> <!--2-->
                 <startModule>elijars.simpleapplication</startModule> <!--3-->
             </configuration>
         </execution>

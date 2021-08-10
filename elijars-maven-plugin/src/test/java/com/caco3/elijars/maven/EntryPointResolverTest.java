@@ -30,4 +30,16 @@ class EntryPointResolverTest {
                     .isEqualTo(application.getMainClassName());
         }
     }
+
+    @Test
+    void entryPointResolvedFromManifest() {
+        EntryPointResolver resolver = new EntryPointResolver();
+        SampleApplication application = SampleApplication.CLASSPATH_APPLICATION;
+        try (FileSystemResourceLoader resourceLoader = FileSystemResourceLoader.forJar(application.getOriginalJar())) {
+            EntryPoint entryPoint = resolver.resolveEntryPoint(resourceLoader);
+            assertThat(entryPoint.getModuleName()).isNull();
+            assertThat(entryPoint.getMainClassName())
+                    .isEqualTo(application.getMainClassName());
+        }
+    }
 }

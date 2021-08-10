@@ -60,7 +60,7 @@
                             <goal>compose</goal>
                         </goals>
                         <configuration>
-                            <startClass>com.caco3.elijars.sample.kotlinapplication.Main</startClass>
+                            <mainClass>com.caco3.elijars.sample.kotlinapplication.Main</mainClass>
                             <startModule>com.caco3.elijars.samples.kotlin.application</startModule>
                         </configuration>
                     </execution>

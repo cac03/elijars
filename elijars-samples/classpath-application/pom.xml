@@ -22,6 +22,9 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <archive>
+                        <manifest>
+                            <mainClass>com.caco3.elijars.samples.classpathapplication.Main</mainClass>
+                        </manifest>
                         <manifestEntries>
                             <Custom-Entry>Test entry for classpath application</Custom-Entry>
                         </manifestEntries>
@@ -37,9 +40,6 @@
                         <goals>
                             <goal>compose</goal>
                         </goals>
-                        <configuration>
-                            <startClass>com.caco3.elijars.samples.classpathapplication.Main</startClass>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

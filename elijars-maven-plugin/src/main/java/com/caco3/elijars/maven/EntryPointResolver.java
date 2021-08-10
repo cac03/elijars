@@ -1,39 +1,35 @@
 package com.caco3.elijars.maven;
 
-import com.caco3.elijars.resource.FileSystemResourceLoader;
 import com.caco3.elijars.resource.Resource;
 import com.caco3.elijars.resource.ResourceLoader;
-import com.caco3.elijars.utils.Assert;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.module.ModuleDescriptor;
-import java.nio.file.Path;
 import java.util.Optional;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 
 public class EntryPointResolver {
-    private static final Logger logger = LoggerFactory.getLogger(EntryPointResolver.class);
-
-    public EntryPoint resolveEntryPoint(Path jar) {
-        Assert.notNull(jar, "jar == null");
-        try (FileSystemResourceLoader resourceLoader = FileSystemResourceLoader.forJar(jar)) {
-            Resource resource = resourceLoader.loadByName("/module-info.class")
-                    .orElseThrow();
-            ModuleDescriptor moduleDescriptor = resource.mapInputStream(ModuleDescriptor::read);
-            String moduleName = moduleDescriptor.name();
-            String mainClassName = moduleDescriptor.mainClass().orElseThrow();
-            return new EntryPoint(moduleName, mainClassName);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
     public EntryPoint resolveEntryPoint(ResourceLoader pathResourceLoader) {
         return pathResourceLoader.loadByName("/module-info.class")
                 .map(this::readModuleDescriptor)
-                .flatMap(this::toEntryPoint)
+                .map(this::toEntryPoint)
+                .orElseGet(() -> readFromManifest(pathResourceLoader))
                 .orElseThrow();
+    }
+
+    private Optional<EntryPoint> readFromManifest(ResourceLoader pathResourceLoader) {
+        return pathResourceLoader.loadByName("/META-INF/MANIFEST.MF")
+                .map(this::readManifest)
+                .map(it -> new EntryPoint(null, it.getMainAttributes().getValue(Attributes.Name.MAIN_CLASS)));
+    }
+
+    private Manifest readManifest(Resource it) {
+        try {
+            return it.mapInputStream(Manifest::new);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     private Optional<EntryPoint> toEntryPoint(ModuleDescriptor moduleDescriptor) {

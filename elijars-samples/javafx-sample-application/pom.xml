@@ -23,7 +23,7 @@
                             <goal>compose</goal>
                         </goals>
                         <configuration>
-                            <startClass>com.caco3.elijars.javafxsample.Sample</startClass>
+                            <mainClass>com.caco3.elijars.javafxsample.Sample</mainClass>
                             <startModule>elijars.javafx.sample.application</startModule>
                         </configuration>
                     </execution>

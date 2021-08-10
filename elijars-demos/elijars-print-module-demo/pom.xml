@@ -27,7 +27,7 @@
                                 </goals>
                                 <configuration>
                                     <startModule>com.caco3.elijarsdemo.printmodule</startModule>
-                                    <startClass>com.caco3.elijarsdemo.printmodule.PrintModuleDemo</startClass>
+                                    <mainClass>com.caco3.elijarsdemo.printmodule.PrintModuleDemo</mainClass>
                                 </configuration>
                             </execution>
                         </executions>
