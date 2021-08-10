@@ -24,7 +24,7 @@
                         </goals>
                         <configuration>
                             <mainClass>com.caco3.elijars.javafxsample.Sample</mainClass>
-                            <startModule>elijars.javafx.sample.application</startModule>
+                            <mainModule>elijars.javafx.sample.application</mainModule>
                         </configuration>
                     </execution>
                 </executions>

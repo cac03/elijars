@@ -46,7 +46,7 @@ import static org.codehaus.plexus.archiver.util.DefaultArchivedFileSet.archivedF
  *
  * <ol>
  *     <li>{@code mainClass} - is the class' name with main method</li>
- *     <li>{@code startModule} - is the the name of the module with the main class</li>
+ *     <li>{@code mainModule} - is the the name of the module with the main class</li>
  * </ol>
  */
 @Mojo(
@@ -66,7 +66,7 @@ public class ComposeMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project.build.outputDirectory}", required = true)
     private File outputDirectory;
     @Parameter
-    private String startModule;
+    private String mainModule;
     @Parameter
     private String mainClass;
     @Parameter(defaultValue = "${session}", readonly = true)
@@ -107,7 +107,7 @@ public class ComposeMojo extends AbstractMojo {
 
     private EntryPoint resolveEntryPoint(File jar) {
         if (mainClass != null) {
-            return new EntryPoint(startModule, mainClass);
+            return new EntryPoint(mainModule, mainClass);
         }
         try (FileSystemResourceLoader resourceLoader = FileSystemResourceLoader.forJar(jar.toPath())) {
             return new EntryPointResolver().resolveEntryPoint(resourceLoader);

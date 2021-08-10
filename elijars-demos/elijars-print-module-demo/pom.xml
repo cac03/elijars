@@ -26,7 +26,7 @@
                                     <goal>compose</goal>
                                 </goals>
                                 <configuration>
-                                    <startModule>com.caco3.elijarsdemo.printmodule</startModule>
+                                    <mainModule>com.caco3.elijarsdemo.printmodule</mainModule>
                                     <mainClass>com.caco3.elijarsdemo.printmodule.PrintModuleDemo</mainClass>
                                 </configuration>
                             </execution>

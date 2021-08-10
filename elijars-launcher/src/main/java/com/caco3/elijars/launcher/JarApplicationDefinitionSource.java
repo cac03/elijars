@@ -47,12 +47,12 @@ public class JarApplicationDefinitionSource implements ApplicationDefinitionSour
     public ApplicationDefinition getApplicationDefinition() {
         Manifest manifest = readManifest();
         String mainClass = getMainClass(manifest);
-        String startModule = getStartModule(manifest);
+        String mainModule = getMainModule(manifest);
         List<Path> modulePath = collectModulePath();
         return ApplicationDefinition.builder()
                 .dependencies(modulePath)
                 .mainClassName(mainClass)
-                .mainModuleName(startModule)
+                .mainModuleName(mainModule)
                 .build();
     }
 
@@ -71,7 +71,7 @@ public class JarApplicationDefinitionSource implements ApplicationDefinitionSour
         return manifest.getMainAttributes().getValue(ELIJARS_START_CLASS);
     }
 
-    private static String getStartModule(Manifest manifest) {
+    private static String getMainModule(Manifest manifest) {
         return manifest.getMainAttributes().getValue(ELIJARS_START_MODULE);
     }
 

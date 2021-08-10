@@ -35,7 +35,7 @@
                         </goals>
                         <configuration>
                             <mainClass>com.caco3.elijars.simpleapplication.Main</mainClass>
-                            <startModule>elijars.simpleapplication</startModule>
+                            <mainModule>elijars.simpleapplication</mainModule>
                         </configuration>
                     </execution>
                 </executions>

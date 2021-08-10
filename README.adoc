@@ -101,7 +101,7 @@ Add maven plugin to your build:
             </goals>
             <configuration>
                 <mainClass>com.caco3.elijars.simpleapplication.Main</mainClass> <!--2-->
-                <startModule>elijars.simpleapplication</startModule> <!--3-->
+                <mainModule>elijars.simpleapplication</mainModule> <!--3-->
             </configuration>
         </execution>
     </executions>
