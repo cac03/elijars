@@ -2,6 +2,8 @@
 
 *Elijars* creates JPMS aware executable jars with dependencies.
 
+image::https://jitpack.io/v/cac03/elijars.svg[link="https://jitpack.io/#cac03/elijars"]
+
 . *JPMS awareness*:
 .. If an application has a module descriptor -- `module-info.java`, then the `java -jar myjar.jar` command places application classes into a module _created by developer_, by default they are in _unnamed_ module.
 See <<jpmsAwareness>>
@@ -84,14 +86,29 @@ open module com.caco3.elijarsdemo.printmodule {
 
 === Maven
 
-Add maven plugin to your build:
+. Add jitpack repository to `pom.xml`:
++
+[source,xml]
+.pom.xml
+----
+<project>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jitpack</id>
+            <url>https://jitpack.io</url>
+        </pluginRepository>
+    </pluginRepositories>
+</project>
+----
 
+. Add maven plugin to your build:
++
 [source,xml]
 ----
 <plugin>
     <groupId>com.github.cac03.elijars</groupId>
     <artifactId>elijars-maven-plugin</artifactId>
-    <version>${revision}</version>
+    <version>0.0.1</version>
     <executions>
         <execution>
             <goals>
