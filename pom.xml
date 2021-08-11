@@ -7,6 +7,7 @@
     <groupId>com.caco3</groupId>
     <artifactId>elijars</artifactId>
     <version>${revision}</version>
+    <description>Elijars creates JPMS-aware executable self-contained jars</description>
 
     <modules>
         <module>elijars-launcher</module>
@@ -47,6 +48,13 @@
         <wagon.version>3.4.3</wagon.version>
         <zt-exec.version>1.12</zt-exec.version>
     </properties>
+
+    <scm>
+        <connection>scm:git:git@github.com:cac03/elijars.git</connection>
+        <developerConnection>scm:git:git@github.com:cac03/elijars.git</developerConnection>
+        <url>https://github.com/cac03/elijars</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <build>
         <plugins>
