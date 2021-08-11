@@ -89,7 +89,7 @@ Add maven plugin to your build:
 [source,xml]
 ----
 <plugin>
-    <groupId>com.caco3</groupId>
+    <groupId>com.github.cac03.elijars</groupId>
     <artifactId>elijars-maven-plugin</artifactId>
     <version>${revision}</version>
     <executions>

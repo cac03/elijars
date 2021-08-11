@@ -57,7 +57,7 @@ import static org.codehaus.plexus.archiver.util.DefaultArchivedFileSet.archivedF
 public class ComposeMojo extends AbstractMojo {
     private static final String SEPARATOR = "/";
     private static final String ELIJARS_INF = "ELIJARS-INF";
-    private static final String LAUNCHER_GROUP_ID = "com.caco3";
+    private static final String LAUNCHER_GROUP_ID = "com.github.cac03.elijars";
     private static final String LAUNCHER_ARTIFACT_ID = "elijars-launcher";
     private static final String STARTER_CLASS_NAME = "com.caco3.elijars.Starter";
 
@@ -184,7 +184,7 @@ public class ComposeMojo extends AbstractMojo {
     private Plugin findElijarsMavenPlugin() {
         return mavenProject.getBuildPlugins()
                 .stream()
-                .filter(it -> "elijars-maven-plugin".equals(it.getArtifactId()) && "com.caco3".equals(it.getGroupId()))
+                .filter(it -> "elijars-maven-plugin".equals(it.getArtifactId()) && "com.github.cac03.elijars".equals(it.getGroupId()))
                 .findFirst()
                 .orElseThrow();
     }

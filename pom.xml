@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.caco3</groupId>
+    <groupId>com.github.cac03.elijars</groupId>
     <artifactId>elijars</artifactId>
     <version>${revision}</version>
     <description>Elijars creates JPMS-aware executable self-contained jars</description>

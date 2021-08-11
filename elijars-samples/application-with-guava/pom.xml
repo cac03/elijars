@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>elijars-samples</artifactId>
-        <groupId>com.caco3</groupId>
+        <groupId>com.github.cac03.elijars</groupId>
         <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -35,7 +35,7 @@
             </plugin>
 
             <plugin>
-                <groupId>com.caco3</groupId>
+                <groupId>com.github.cac03.elijars</groupId>
                 <artifactId>elijars-maven-plugin</artifactId>
                 <version>${revision}</version>
                 <executions>

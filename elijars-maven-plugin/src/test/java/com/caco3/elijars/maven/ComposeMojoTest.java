@@ -64,7 +64,7 @@ class ComposeMojoTest {
         @Test
         void originalPomPreserved() {
             try (FileSystemResourceLoader resourceLoader = FileSystemResourceLoader.forJar(application.getJar())) {
-                Optional<Resource> resource = resourceLoader.loadByName("META-INF/maven/com.caco3/sample-application/pom.xml");
+                Optional<Resource> resource = resourceLoader.loadByName("META-INF/maven/com.github.cac03.elijars/sample-application/pom.xml");
                 assertThat(resource)
                         .isPresent();
             }
