@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -87,6 +88,19 @@ class ComposeMojoTest {
 
             assertThat(output)
                     .contains("Successfully read manifest");
+        }
+
+        @Test
+        void lombokIsNotIncludedInJar() {
+            try (FileSystemResourceLoader resourceLoader = FileSystemResourceLoader.forJar(application.getJar())) {
+                List<Resource> lomboks = resourceLoader.loadAll()
+                        .stream()
+                        .filter(it -> it.getPath().toString().toLowerCase(Locale.US).endsWith(".jar"))
+                        .filter(it -> it.getPath().toString().contains("lombok"))
+                        .collect(Collectors.toList());
+
+                assertThat(lomboks).isEmpty();
+            }
         }
     }
 

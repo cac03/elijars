@@ -36,10 +36,24 @@
                         <configuration>
                             <mainClass>com.caco3.elijars.simpleapplication.Main</mainClass>
                             <mainModule>elijars.simpleapplication</mainModule>
+                            <exclusions>
+                                <exclusion>
+                                    <groupId>org.projectlombok</groupId>
+                                    <artifactId>lombok</artifactId>
+                                </exclusion>
+                            </exclusions>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 </project>

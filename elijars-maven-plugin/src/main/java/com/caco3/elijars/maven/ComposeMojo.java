@@ -27,6 +27,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -48,6 +50,18 @@ import static org.codehaus.plexus.archiver.util.DefaultArchivedFileSet.archivedF
  *     <li>{@code mainClass} - is the class' name with main method</li>
  *     <li>{@code mainModule} - is the the name of the module with the main class</li>
  * </ol>
+ *
+ * To exclude a dependency use the {@code exclusions} parameter.
+ * E.g.:
+ *
+ * <pre>{@code
+ * <exclusions>
+ *     <exclusion>
+ *         <groupId>org.projectlombok</groupId>
+ *         <artifactId>lombok</artifactId>
+ *     </exclusion>
+ * </exclusions>
+ * }</pre>
  */
 @Mojo(
         name = "compose",
@@ -71,6 +85,15 @@ public class ComposeMojo extends AbstractMojo {
     private String mainClass;
     @Parameter(defaultValue = "${session}", readonly = true)
     private MavenSession mavenSession;
+    /**
+     * List of exclusions to the jar file.
+     * {@link Exclusion}s are specified by {@link Exclusion#getArtifactId()} and {@link Exclusion#getGroupId()}.
+     *
+     * @see Exclusion#excludes(Artifact)
+     * @see #shouldInclude(Artifact)
+     */
+    @Parameter
+    private List<Exclusion> exclusions = Collections.emptyList();
     @Component
     private ArtifactHandler artifactHandler;
     @Component
@@ -148,8 +171,21 @@ public class ComposeMojo extends AbstractMojo {
     private void includeDependencies(JarArchiver jarArchiver) {
         mavenProject.getArtifacts()
                 .stream()
+                .filter(this::shouldInclude)
                 .map(Artifact::getFile)
                 .forEach(it -> addArtifact(jarArchiver, it));
+    }
+
+    /**
+     * Returns {@code true} if this artifact should be included into the final jar file.
+     *
+     * @param artifact to check for inclusion
+     * @return {@code true} if the {@code artifact} should be included into jar file, {@code false} otherwise
+     */
+    private boolean shouldInclude(Artifact artifact) {
+        return exclusions
+                .stream()
+                .noneMatch(it -> it.excludes(artifact));
     }
 
     private static String destinationNameForDependency(File file) {

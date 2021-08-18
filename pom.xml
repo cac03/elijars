@@ -34,6 +34,7 @@
         <jimfs.version>1.2</jimfs.version>
         <junit-jupiter.version>5.7.2</junit-jupiter.version>
         <kotlin.version>1.5.21</kotlin.version>
+        <lombok.version>1.18.20</lombok.version>
         <maven-plugin-api.version>3.6.1</maven-plugin-api.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-failsafe-plugin.version>2.22.2</maven-failsafe-plugin.version>
@@ -261,6 +262,12 @@
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-test</artifactId>
                 <version>${kotlin.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

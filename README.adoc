@@ -122,9 +122,29 @@ open module com.caco3.elijarsdemo.printmodule {
     </executions>
 </plugin>
 ----
+
 <1> Enable `compose` goal of the plugin
 <2> Specify the main class to launch
 <3> Specify the main module name
+
+To exclude a dependency from the `jar` configure exclusions.
+
+Example:
+
+[source,xml]
+.pom.xml
+----
+<configuration>
+    <mainClass>com.caco3.elijars.simpleapplication.Main</mainClass>
+    <mainModule>elijars.simpleapplication</mainModule>
+    <exclusions>
+        <exclusion>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </exclusion>
+    </exclusions>
+</configuration>
+----
 
 == Use cases
 
